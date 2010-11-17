@@ -23,7 +23,25 @@
 // A common pattern is to create a 'templates' container to contain structural templates for things, then define invertible functions to (1) render those templates from server-side data, and then
 // (2) serialize their state back into logical data objects. The replicate() function is the beginning of that process.
 
+//   Element types.
+//   Each template is assumed to be of a different type; that is, it has its own logical-data conversion rules. Template names and type names are linked; $('#foo') will select the template for
+//   the 'foo' type, for example. When you create a new 'foo', you get an element with the class 'foo' and the 'foo' initializers will be run on it.
 
+//   You're expected to know what type an object is before you create an element from it. (So the type detection goes only one way -- given an element you can find its type, but there isn't
+//   necessarily a way to find an object's type based on its data.) Here's how to define a simple first-name/last-name component, for instance:
+
+//   | find('.first-name').val(it.first).end().find('.last-name').val(it.last).end() <miso(person)> {first: it.find('.first-name').val(), last: it.find('.last-name').val()};
+
+//   It's expected that you'll have this markup (possibly with more stuff):
+
+//   | <div id='person'>
+//       <input class='first-name' />
+//       <input class='last-name' />
+//     </div>
+
+//   You can also define initializers:
+
+//   | minit(person) << find('.first-name, .last-name').instavalidate(/^\w+$/).end();
 
 // Final configuration.
 
