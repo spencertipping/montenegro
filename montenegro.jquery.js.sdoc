@@ -15,7 +15,9 @@ You can write this instead:
 
 | 'selector' >jqc> ...;
 
-  caterwaul.tconfiguration('std', 'montenegro.jquery.event', function () {defsubst[_selector >jqc> _handler][$(_selector).live('click', fn_[_handler, where[t = $(this)]])]}).
+  caterwaul.tconfiguration('std', 'montenegro.jquery.event', function () {
+    this.rmacro(qs[_ >jqc> _][fn[selector, handler][qs[$(_selector).live('click', fn_[_handler, where[t = $(this)]])].replace({_selector: selector, _handler: handler}),
+                                                    when[selector.is_string()]]])}).
 
 Cloning.
 A common pattern is to create a 'templates' container to contain structural templates for things, then define invertible functions to (1) render those templates from server-side data, and then
