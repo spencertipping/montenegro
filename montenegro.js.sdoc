@@ -1,0 +1,11 @@
+Montenegro server library | Spencer Tipping
+Licensed under the terms of the MIT source code license
+
+Introduction.
+Montenegro extends Caterwaul (http://spencertipping.com/caterwaul) to operate in a node.js environment and provide REST web services. It provides asynchronous connectors, stream transformers,
+URL routing, and some other utilities that make non-blocking servers easier to develop.
+
+montenegro = caterwaul.clone();
+
+Asynchronous connectors.
+Node programs often stream things, but sometimes convert those streams to whole pieces of data. This macro/function layer provides relatively simple ways of doing that.
