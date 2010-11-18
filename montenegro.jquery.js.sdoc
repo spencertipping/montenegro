@@ -2,47 +2,66 @@ Client-side Montenegro/jQuery bindings | Spencer Tipping
 Licensed under the terms of the MIT source code license
 
 Introduction.
-Montenegro works with jQuery to add structure to user interfaces and define useful shorthands for common cases.
+Montenegro works with jQuery to add structure to user interfaces and define useful shorthands for common cases. It also provides a Javascript markup language that you can use to build
+interfaces instead of going the HTML route. For logic-heavy applications this may make more sense than separating the layout.
 
   montenegro =
 
-Event bindings.
-Montenegro specifies syntax for binding events through jQuery. For example, instead of writing this:
+DOM construction.
+You can build elements using a CSS-selector-style syntax. (Alternatively, you can provide an element in the markup; if you do it this way, the template element's ID should match the model
+name.) So, for example, suppose we're modeling a person with a name and e-mail address. Here's what the markup might look like in HTML:
 
-| $('selector').live('click', fn_[...]);
+| <div id='person' class='person'>
+    <input class='name nonempty' />
+    <input class='email' />
+    <a class='facebook' href='http://facebook.com/someone'>A Facebook Page</a>
+  </div>
 
-You can write this instead:
+Here's what it looks like using Montenegro markup syntax (triggered with the html<< operator):
 
-| 'selector' >jqc> ...;
+| html<< div.person[input.name.nonempty, input.email, a.facebook(href='http://facebook.com/someone')['A Facebook Page']]
 
-  caterwaul.tconfiguration('std', 'montenegro.jquery.event', function () {
-    this.rmacro(qs[_ >jqc> _], fn[selector, handler][qs[$(_selector).live('click', fn_[_handler, where[t = $(this)]])].replace({_selector: selector, _handler: handler}),
-                                                     when[selector.is_string()]])}).
+  Automation and event handlers.
+  You can get the jQuery shell for an element by using the '/' operator. The right-hand side is an invocation on the jQuery shell; for example:
 
-Cloning.
-A common pattern is to create a 'templates' container to contain structural templates for things, then define invertible functions to (1) render those templates from server-side data, and then
-(2) serialize their state back into logical data objects. The replicate() function is the beginning of that process.
+  | $('<a>').addClass('foo').click(fn_[...]).mouseover(fn_[...])
+    // can be written as:
+    html<< a.foo/click(fn_[...]).mouseover(fn_[...])
 
-  Element types.
-  Each template is assumed to be of a different type; that is, it has its own logical-data conversion rules. Template names and type names are linked; $('#foo') will select the template for
-  the 'foo' type, for example. When you create a new 'foo', you get an element with the class 'foo' and the 'foo' initializers will be run on it.
+  Anything after a '/' for an element is not considered to be HTML, so you'll have to use another html<< if you want to create elements to pass into a jQuery function. For example:
 
-  You're expected to know what type an object is before you create an element from it. (So the type detection goes only one way -- given an element you can find its type, but there isn't
-  necessarily a way to find an object's type based on its data.) Here's how to define a simple first-name/last-name component, for instance:
+  | html<< a.foo/append(span['some text'])              // won't do what you want
+    html<< a.foo/append(html<< span['some text'])       // this is the right way to do it
 
-  | find('.first-name').val(it.first).end().find('.last-name').val(it.last).end() <miso(person)> {first: it.find('.first-name').val(), last: it.find('.last-name').val()};
+  Evaluating subexpressions.
+  Going back to the person example, suppose you have a list of people that you want to insert into a div. Here's what that looks like:
 
-  It's expected that you'll have this markup (possibly with more stuff):
+  | var people = sa<< [...];
+    var person = fn[p][html<< div.person[input.name.nonempty/val(p.name)]];
+    var ui     = html<< div.people[!people.map(person), button.save['Save'], button.cancel['Cancel']];
 
-  | <div id='person'>
-      <input class='first-name' />
-      <input class='last-name' />
-    </div>
+  Here, the expression 'people.map(person)' gets evaluated as a Javascript expression rather than as markup. The expression should return a string, sequence, array, or jQuery object.
 
-  You can also define initializers:
+  Generalized side-effects.
+  Montenegro adds an 'se' method to jQuery shells to allow you to perform generalized side-effects. For example:
 
-  | minit(person) << find('.first-name, .last-name').instavalidate(/^\w+$/).end();
+  | html<< div.foo/se(fn_[this.side_effect(), this.other_side_effect()])
+
+  The se() method passes the its jQuery object into the side-effecting function (both as 'this' and as the first parameter) and returns the original jQuery object (which will be unmodified
+  unless the function explicitly mutates it; importantly, though, the function can use find() and such without modifying the outer state stack).
+
+  Mapping.
+  You can map an element through a function using the '%' shorthand. For example:
+
+  | var nonempty = fn_[this.instavalidate(/^.+$/)];
+    var ui = html<< div[input.name%nonempty, input.title%nonempty]
+
+  This isn't quite the same thing as side-effecting. Using the map shorthand replaces the element with whatever your map function returns, which may or may not be desirable (if it isn't, you
+  should probably use /se(...) instead -- see 'Generalized side-effects').
+
+    caterwaul.tconfiguration('std seq', 'montenegro.jquery.dom', function () {}).
 
 Final configuration.
+This one loads all of the others. Keep in mind that you can also just use 'montenegro' instead of 'caterwaul' to get this configuration.
 
   configuration('montenegro.jquery', function () {this.configure('montenegro.jquery.event')}).clone('montenegro.jquery');
