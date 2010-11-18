@@ -64,4 +64,4 @@ Here's what it looks like using Montenegro markup syntax (triggered with the htm
 Final configuration.
 This one loads all of the others. Keep in mind that you can also just use 'montenegro' instead of 'caterwaul' to get this configuration.
 
-  configuration('montenegro.jquery', function () {this.configure('montenegro.jquery.event')}).clone('montenegro.jquery');
+  configuration('montenegro.jquery', function () {}).clone('montenegro.jquery');
