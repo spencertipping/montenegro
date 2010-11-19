@@ -9,7 +9,7 @@ interfaces instead of going the HTML route. For logic-heavy applications this ma
 
 Core extension.
 This just takes care of initializing the montenegro object on Caterwaul. We also close over the jQuery object so that the user can set noConflict() later on without disrupting the HTML
-constructors.
+constructors. You can also replace this jQuery function with a different one, maybe to trace the calls or some such.
 
   configuration('montenegro.jquery.core', function () {this.montenegro = {$: jQuery}}).
 
@@ -30,7 +30,7 @@ name.) So, for example, suppose we're modeling a person with a name and e-mail a
 
 Here's what it looks like using Montenegro markup syntax (triggered with the html<< operator):
 
-| html<< div.person[input.name.nonempty, input.email, a.facebook(href='http://facebook.com/someone')['A Facebook Page']]
+| html<< div.person(input.name.nonempty, input.email, a.facebook[href='http://facebook.com/someone']('A Facebook Page'))
 
   Automation and event handlers.
   You can get the jQuery shell for an element by using the '/' operator. The right-hand side is an invocation on the jQuery shell; for example:
@@ -41,15 +41,15 @@ Here's what it looks like using Montenegro markup syntax (triggered with the htm
 
   Anything after a '/' for an element is not considered to be HTML, so you'll have to use another html<< if you want to create elements to pass into a jQuery function. For example:
 
-  | html<< a.foo/append(span['some text'])              // won't do what you want
-    html<< a.foo/append(html<< span['some text'])       // this is the right way to do it
+  | html<< a.foo/append(span('some text'))              // won't do what you want
+    html<< a.foo/append(html<< span('some text'))       // this is the right way to do it
 
   Evaluating subexpressions.
   Going back to the person example, suppose you have a list of people that you want to insert into a div. Here's what that looks like:
 
   | var people = sa<< [...];
-    var person = fn[p][html<< div.person[input.name.nonempty/val(p.name)]];
-    var ui     = html<< div.people[!people.map(person), button.save['Save'], button.cancel['Cancel']];
+    var person = fn[p][html<< div.person(input.name.nonempty/val(p.name))];
+    var ui     = html<< div.people(!people.map(person), button.save('Save'), button.cancel('Cancel'));
 
   Here, the expression 'people.map(person)' gets evaluated as a Javascript expression rather than as markup. The expression should return a string, sequence, array, or jQuery object.
 
@@ -65,14 +65,14 @@ Here's what it looks like using Montenegro markup syntax (triggered with the htm
   You can map an element through a function using the '%' shorthand. For example:
 
   | var nonempty = fn_[this.instavalidate(/^.+$/)];
-    var ui = html<< div[input.name%nonempty, input.title%nonempty]
+    var ui = html<< div(input.name%nonempty, input.title%nonempty)
 
   This isn't quite the same thing as side-effecting. Using the map shorthand replaces the element with whatever your map function returns, which may or may not be desirable (if it isn't, you
   should probably use /se(...) instead -- see 'Generalized side-effects').
 
   Note that tempting as it is, you can't say this:
 
-  | html<< div[(input.name, input.title)%nonempty]      // can't do this, even though it would be awesome
+  | html<< div((input.name, input.title)%nonempty)      // can't do this, even though it would be awesome
 
   I considered adding a distributive property, but Javascript's syntax is restrictive enough that I don't think it makes sense. It also makes you think too hard about your markup, which isn't
   a good thing. The markup should be simple and local, and your modifier functions should be short enough to type several times. (This can be achieved by using a let-binding or similar.)
@@ -86,21 +86,21 @@ Here's what it looks like using Montenegro markup syntax (triggered with the htm
 
   After this definition, these are equivalent:
 
-  | html<< div.test['stuff']
-    html<< foo.test['stuff']
+  | html<< div.test('stuff')
+    html<< foo.test('stuff')
 
-  Aliases are transitive, but this dependency is resolved at definition-time, not as the aliases are used. (So if you do something inadvisable such as changing an alias, the transitivity
+  Aliases are transitive, but this dependency is resolved at definition-time instead of as the aliases are used. (So if you do something inadvisable such as changing an alias, the transitivity
   relation won't make much sense.)
 
     tconfiguration('std seq iter', 'montenegro.jquery.dom', function () {
       this.configure('montenegro.jquery.core montenegro.jquery.methods');
 
-      let*[as = this.montenegro.html_aliases = {}, a = this.montenegro.html_alias(e, t) = (as[e] = as[t] || t, this)]
+      let*[as = this.montenegro.html_aliases = {}, a = this.montenegro.html_alias(e, t) = (as[e] = as[t] || t, this), $ = this.montenegro.$]
       [this.macro(qs[_ >html(alias)> _], fn[e, t][qs[_f(_e, _t)].replace({_f: new this.ref(a), _e: new this.ref(e.data), _t: new this.ref(t.data)})]),
 
        this.rmacro(qs[ html<< _], html_expand),
        where*[ref(x)                 = new caterwaul.ref(x),
-              node_create(tag)       = qs[_$(_document.createElement(_as[_tag] || _tag))].replace({_$: ref(jQuery), _as: ref(as), _tag: ref(tag), _document: ref(document)}),
+              node_create(tag)       = qs[_$(_document.createElement(_as[_tag] || _tag))].replace({_$: ref($), _as: ref(as), _tag: ref(tag), _document: ref(document)}),
               node_attributes(e, as) = qs[_e.se(fn_[_as])].replace({_e: e, _as: as.flatten(',').map(fn[a][qs[this.attr(_name, _value)].replace({_name: ref(a[0].data), _value: a[1]})])}),
 
               append_single(node, c) = c.force ? node.append(x) <se< c : node.append(c.constructor === String ? document.createTextNode(c) : c),
@@ -109,11 +109,15 @@ Here's what it looks like using Montenegro markup syntax (triggered with the htm
               html_expand(tree)      = tree && let[m = tree.match(qs[_/_])][m ? qs[_e._f].replace({_e: html_expand(m[0]), _f: m[1]}) :
                                                   (m = tree.match(qs[_._]))   ? qs[_e.addClass(_c)].replace({_e: html_expand(m[0]), _c: ref(m[1].data)}) :
                                                   (m = tree.match(qs[_%_]))   ? qs[_f(_e)].replace({_e: html_expand(m[0]), _f: m[1]}) :
-                                                  (m = tree.match(qs[_[_]]))  ? qs[_f(_e, _c)].replace({_f: ref(append_multiple), _e: html_expand(m[0]), _c: html_expand(m[1])}) :
-                                                  (m = tree.match(qs[_(_)]))  ? node_attributes(html_expand(m[0]), m[1]) :
+                                                  (m = tree.match(qs[_(_)]))  ? qs[_f(_e, _c)].replace({_f: ref(append_multiple), _e: html_expand(m[0]), _c: html_expand(m[1])}) :
+                                                  (m = tree.match(qs[_[_]]))  ? node_attributes(html_expand(m[0]), m[1]) :
                                                   (m = tree.match(qs[_,_]))   ? tree.map(html_expand) :
                                                   (m = tree.match(qs[!_]))    ? m[0] :
                                                              tree.is_string() ? tree : node_create(tree.data)]]]}).
+
+Data modeling.
+Mapping data onto UI components is not always straightforward. If the UI just represents an object (i.e. no arrays), then using the .val() method is generally an easy solution. The problem
+comes in when you have arrays of elements or any irregular data requirements.
 
 Final configuration.
 This one loads all of the others.
