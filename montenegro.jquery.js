@@ -72,20 +72,22 @@
 //   a good thing. The markup should be simple and local, and your modifier functions should be short enough to type several times. (This can be achieved by using a let-binding or similar.)
 
     tconfiguration('std seq iter', 'montenegro.jquery.dom', function () {
-      this.configure('montenegro.jquery.methods').rmacro(qs[ html<< _], expander),
-      where*[ref(x)               = new caterwaul.ref(x),
-             create_node(tag)     = qs[_$(_document.createElement(_tag))].replace({_$: ref(jQuery), _tag: ref(tag), _document: ref(document)}),
-             attributes(e, attrs) = qs[_e.se(fn_[_as])].replace({_e: e, _as: attrs.flatten(',').map(fn[a][qs[this.attr(_name, _value)].replace({_name: ref(a[0].data), _value: a[1]})])}),
-             appendPrime(node, c) = c.force ? ((node.append(x) <sm< c).force(), node) : c.constructor === String ? node.append(document.createTextNode(c)) : node.append(c),
-             append(node)         = ((appendPrime(node, x) <sm< sa<< Array.prototype.slice.call(arguments, 1)).force(), node),
+      this.configure('montenegro.jquery.methods').rmacro(qs[ html<< _], html_expand),
+      where*[ref(x)                 = new caterwaul.ref(x),
+             node_create(tag)       = qs[_$(_document.createElement(_tag))].replace({_$: ref(jQuery), _tag: ref(tag), _document: ref(document)}),
+             node_attributes(e, as) = qs[_e.se(fn_[_as])].replace({_e: e, _as: as.flatten(',').map(fn[a][qs[this.attr(_name, _value)].replace({_name: ref(a[0].data), _value: a[1]})])}),
 
-             expander(expression) = expression && let[m = expression.match(qs[_/_])][m ? qs[_e._f].replace({_e: expander(m[0]), _f: m[1]}) :
-                                                     (m = expression.match(qs[_._]))   ? qs[_e.addClass(_c)].replace({_e: expander(m[0]), _c: ref(m[1].data)}) :
-                                                     (m = expression.match(qs[_%_]))   ? qs[_f(_e)].replace({_e: expander(m[0]), _f: m[1]}) :
-                                                     (m = expression.match(qs[_[_]]))  ? qs[_f(_e, _c)].replace({_f: ref(append), _e: expander(m[0]), _c: expander(m[1])}) :
-                                                     (m = expression.match(qs[_(_)]))  ? attributes(expander(m[0]), m[1]) :
-                                                     (m = expression.match(qs[_,_]))   ? qs[_a, _b].replace({_a: expander(m[0]), _b: expander(m[1])}) :
-                                                     (m = expression.match(qs[!_]))    ? m[0] : expression.is_string() ? expression : create_node(expression.data)]]}).
+             append_single(node, c) = c.force ? (node.append(x) <sm< c).force() : node.append(c.constructor === String ? document.createTextNode(c) : c),
+             append_multiple(node)  = (append_single(node, x) <sm< sa<< Array.prototype.slice.call(arguments, 1)).force() && node,
+
+             html_expand(tree)      = tree && let[m = tree.match(qs[_/_])][m ? qs[_e._f].replace({_e: html_expand(m[0]), _f: m[1]}) :
+                                                 (m = tree.match(qs[_._]))   ? qs[_e.addClass(_c)].replace({_e: html_expand(m[0]), _c: ref(m[1].data)}) :
+                                                 (m = tree.match(qs[_%_]))   ? qs[_f(_e)].replace({_e: html_expand(m[0]), _f: m[1]}) :
+                                                 (m = tree.match(qs[_[_]]))  ? qs[_f(_e, _c)].replace({_f: ref(append_multiple), _e: html_expand(m[0]), _c: html_expand(m[1])}) :
+                                                 (m = tree.match(qs[_(_)]))  ? node_attributes(html_expand(m[0]), m[1]) :
+                                                 (m = tree.match(qs[_,_]))   ? tree.map(html_expand) :
+                                                 (m = tree.match(qs[!_]))    ? m[0] :
+                                                            tree.is_string() ? tree : node_create(tree.data)]]}).
 
 // Final configuration.
 // This one loads all of the others.

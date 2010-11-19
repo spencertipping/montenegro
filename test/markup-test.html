@@ -3,6 +3,7 @@
   </head>
   <body>
     <script src='http://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.js'></script>
+    <script src='http://spencertipping.com/jquery.fix.append-multiple/jquery.fix.append-multiple.js'></script>
     <script src='../lib/caterwaul.js'></script>
     <script src='../lib/caterwaul.iter.js'></script>
     <script src='../lib/caterwaul.continuation.js'></script>
@@ -12,18 +13,22 @@
     <script>
       caterwaul.clone('std montenegro.jquery')(function () {
         var textify = fn[e][e.text('run through textify')];
+        var boldify = fn[e][e.css('font-weight', 'bold')];
 
         $('body').append( html<< div.test['Single-element test']).
-                  append( html<< div.test[div.blue%textify]).
+                  append( html<< div.test[div.blue%textify%boldify]).
                   append( html<< div.test[h1['h1'], h2.red['h2']%textify, p.blue.underlined['paragraph']]).
+                  append( html<< div.test['3 + 5 is ', !([3 + 5, ' but not ', 4 + 6, html<< button['right?']])]).
                   append( html<< div.test[button['Click me']/click(fn_[alert('Got a click')])]).
-                  append( html<< a(href='http://google.com')['google']);
+                  append( html<< a(href='http://google.com')['google', code.red['some code in red']]%boldify);
       })();
     </script>
 
     <style>
       .red {color: red}
       .blue {color: blue}
+      .hovered {font-weight: bold}
+      .underlined {text-decoration: underline}
     </style>
   </body>
 </html>
