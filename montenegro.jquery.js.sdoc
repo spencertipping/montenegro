@@ -67,21 +67,19 @@ Here's what it looks like using Montenegro markup syntax (triggered with the htm
   a good thing. The markup should be simple and local, and your modifier functions should be short enough to type several times. (This can be achieved by using a let-binding or similar.)
 
     tconfiguration('std seq', 'montenegro.jquery.dom', function () {
-      let*[create_node(tag)     = qs[_$(_document.createElement(_tag))].replace({_$: new this.ref(jQuery), _tag: new this.ref(tag), _document: new this.ref(document)}),
-           append(node, child)  = qs[let[n = _node, c = _child][c.force ? ((n.append(x) <sm< c).force(), n) : c.constructor === String ? n.append(document.createTextNode(c)) : n.append(c)]].
-                                  replace({_child: child, _node: node}),
+      this.rmacro(qs[ html<< _], expander),
+      where*[ref(x)               = new caterwaul.ref(x),
+             create_node(tag)     = console.log(tag) || qs[_$(_document.createElement(_tag))].replace({_$: ref(jQuery), _tag: ref(tag), _document: ref(document)}),
+             attributes(e, attrs) = qs[_e.se(fn_[_as])].replace({_e: ref(e), _as: attrs.flatten(',').map(fn[a][qs[this.attr(_name, _value)].replace({_name: ref(a[0].data), _value: a[1]})])}),
+             append(node, child)  = qs[let[n = _node, c = _child][c.force ? ((n.append(x) <sm< c).force(), n) : c.constructor === String ? n.append(document.createTextNode(c)) : n.append(c)]].
+                                    replace({_child: child, _node: node}),
 
-           attributes(e, attrs) = qs[_e.se(fn_[_as])].
-                                  replace({_e: new this.ref(e), _as: attrs.flatten(',').map(fn[a][qs[this.attr(_name, _value)].replace({_name: new this.ref(a[0].data), _value: a[1]})])}),
-      
-           expander(expression) = let[m = expression.match(qs[_/_])][m ? qs[_e._f].replace({_e: expander(m[0]), _f: m[1]}) :
-                                     (m = expression.match(qs[_._]))   ? qs[_e.addClass(_c)].replace({_e: expander(m[0]), _c: new this.ref(m[1].data)}) :
-                                     (m = expression.match(qs[_%_]))   ? qs[_f(_e)].replace({_e: m[0], _f: m[1]}) :
-                                     (m = expression.match(qs[_[_]]))  ? qs[_f(_e, _c)].replace({_f: new this.ref(append), _e: expander(m[0]), _f: expander(m[1])}) :
-                                     (m = expression.match(qs[_(_)]))  ? attributes(m[0], m[1]) :
-                                     (m = expression.match(qs[!_]))    ? m[0] : create_node(expression)]] in
-
-      this.rmacro(qs[ html<< _], expander)}).
+             expander(expression) = expression && let[m = expression.match(qs[_/_])][m ? qs[_e._f].replace({_e: expander(m[0]), _f: m[1]}) :
+                                                     (m = expression.match(qs[_._]))   ? qs[_e.addClass(_c)].replace({_e: expander(m[0]), _c: ref(m[1].data)}) :
+                                                     (m = expression.match(qs[_%_]))   ? qs[_f(_e)].replace({_e: m[0], _f: m[1]}) :
+                                                     (m = expression.match(qs[_[_]]))  ? qs[_f(_e, _c)].replace({_f: ref(append), _e: expander(m[0]), _c: expander(m[1])}) :
+                                                     (m = expression.match(qs[_(_)]))  ? attributes(m[0], m[1]) :
+                                                     (m = expression.match(qs[!_]))    ? m[0] : create_node(expression.data)]]}).
 
 Final configuration.
 This one loads all of the others.
