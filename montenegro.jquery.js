@@ -69,17 +69,18 @@
     tconfiguration('std seq', 'montenegro.jquery.dom', function () {
       this.rmacro(qs[ html<< _], expander),
       where*[ref(x)               = new caterwaul.ref(x),
-             create_node(tag)     = console.log(tag) || qs[_$(_document.createElement(_tag))].replace({_$: ref(jQuery), _tag: ref(tag), _document: ref(document)}),
+
+             create_node(tag)     = qs[_$(_document.createElement(_tag))].replace({_$: ref(jQuery), _tag: ref(tag), _document: ref(document)}),
              attributes(e, attrs) = qs[_e.se(fn_[_as])].replace({_e: ref(e), _as: attrs.flatten(',').map(fn[a][qs[this.attr(_name, _value)].replace({_name: ref(a[0].data), _value: a[1]})])}),
-             append(node, child)  = qs[let[n = _node, c = _child][c.force ? ((n.append(x) <sm< c).force(), n) : c.constructor === String ? n.append(document.createTextNode(c)) : n.append(c)]].
-                                    replace({_child: child, _node: node}),
+             append(node, child)  = child.force ? ((node.append(x) <sm< child).force(), node) : child.constructor === String ? node.append(document.createTextNode(child)) : node.append(child),
 
              expander(expression) = expression && let[m = expression.match(qs[_/_])][m ? qs[_e._f].replace({_e: expander(m[0]), _f: m[1]}) :
                                                      (m = expression.match(qs[_._]))   ? qs[_e.addClass(_c)].replace({_e: expander(m[0]), _c: ref(m[1].data)}) :
                                                      (m = expression.match(qs[_%_]))   ? qs[_f(_e)].replace({_e: m[0], _f: m[1]}) :
                                                      (m = expression.match(qs[_[_]]))  ? qs[_f(_e, _c)].replace({_f: ref(append), _e: expander(m[0]), _c: expander(m[1])}) :
                                                      (m = expression.match(qs[_(_)]))  ? attributes(m[0], m[1]) :
-                                                     (m = expression.match(qs[!_]))    ? m[0] : create_node(expression.data)]]}).
+                                                     (m = expression.match(qs[_,_]))   ? expression :
+                                                     (m = expression.match(qs[!_]))    ? m[0] : expression.is_string() ? expression : create_node(expression.data)]]}).
 
 // Final configuration.
 // This one loads all of the others.
