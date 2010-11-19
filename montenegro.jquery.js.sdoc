@@ -95,8 +95,7 @@ Here's what it looks like using Montenegro markup syntax (triggered with the htm
     tconfiguration('std seq iter', 'montenegro.jquery.dom', function () {
       this.configure('montenegro.jquery.core montenegro.jquery.methods');
 
-      let*[as = this.montenegro.html_aliases = {},
-           a  = this.montenegro.html_alias(e, t) = (as[e] = as[t] || t, this)]
+      let*[as = this.montenegro.html_aliases = {}, a = this.montenegro.html_alias(e, t) = (as[e] = as[t] || t, this)]
       [this.macro(qs[_ >html(alias)> _], fn[e, t][qs[_f(_e, _t)].replace({_f: new this.ref(a), _e: new this.ref(e.data), _t: new this.ref(t.data)})]),
 
        this.rmacro(qs[ html<< _], html_expand),
@@ -104,8 +103,8 @@ Here's what it looks like using Montenegro markup syntax (triggered with the htm
               node_create(tag)       = qs[_$(_document.createElement(_as[_tag] || _tag))].replace({_$: ref(jQuery), _as: ref(as), _tag: ref(tag), _document: ref(document)}),
               node_attributes(e, as) = qs[_e.se(fn_[_as])].replace({_e: e, _as: as.flatten(',').map(fn[a][qs[this.attr(_name, _value)].replace({_name: ref(a[0].data), _value: a[1]})])}),
 
-              append_single(node, c) = c.force ? (node.append(x) <sm< c).force() : node.append(c.constructor === String ? document.createTextNode(c) : c),
-              append_multiple(node)  = (append_single(node, x) <sm< sa<< Array.prototype.slice.call(arguments, 1)).force() && node,
+              append_single(node, c) = c.force ? node.append(x) <se< c : node.append(c.constructor === String ? document.createTextNode(c) : c),
+              append_multiple(node)  = append_single(node, x) <se< sa<< Array.prototype.slice.call(arguments, 1) && node,
 
               html_expand(tree)      = tree && let[m = tree.match(qs[_/_])][m ? qs[_e._f].replace({_e: html_expand(m[0]), _f: m[1]}) :
                                                   (m = tree.match(qs[_._]))   ? qs[_e.addClass(_c)].replace({_e: html_expand(m[0]), _c: ref(m[1].data)}) :
