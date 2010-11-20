@@ -1,0 +1,20 @@
+Montenegro web framework.
+Montenegro consists of two files, montenegro.jquery.js and montenegro.js. The former is used on the client-side (as a Caterwaul configuration), and the latter is used on the server-side.
+
+Client-side library.
+montenegro.jquery gives you some interesting stuff, perhaps most importantly a syntax for creating markup inside Javascript:
+
+  // Using the montenegro.jquery Caterwaul configuration:
+  var element = html<< div.foo.bar('some text', a[href='http://...']('link to wherever'));
+  $('body').append(element);
+
+In this example, the following markup is appended to the body:
+
+  <div class='foo bar'>
+    some text
+    <a href='http://...'>link to wherever</a>
+  </div>
+
+The key is the html<< operator, which returns a jQuery-wrapped DOM node. The source code explains all of the syntax used to construct DOM elements.
+
+(More documentation forthcoming as further features are designed)
