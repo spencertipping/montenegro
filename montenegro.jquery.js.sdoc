@@ -21,7 +21,7 @@ These are used throughout Montenegro.
   Event extensions.
   Some events are common enough that it's useful to have a handler for them. Hitting the enter key is one of those:
 
-    tconfiguration('std', 'montenegro.jquery.events', function () {$.fn.enter(f) = this.keyup(fn[e][e.detail === 13 && f.call(this, e)])}).
+    tconfiguration('std', 'montenegro.jquery.events', function () {$.fn.enter(f) = this.keyup(fn[e][e.which === 13 && f.call(this, e)])}).
 
 DOM construction.
 You can build elements using a CSS-selector-style syntax. (Alternatively, you can provide an element in the markup; if you do it this way, the template element's ID should match the model
