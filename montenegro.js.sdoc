@@ -58,23 +58,23 @@ HTTP interface to make that happen. You can define a service with the http[] mac
       this.configure('montenegro.core').montenegro.http = {compose: fn_[let[as = sa<< arguments] in fn[request, response][x(request, response) <se< as]]};
       this.montenegro.http.service(path, handlers) =
         let*[path_pattern = new RegExp('^#{path.replace(/[*+?()\[\]]/g, "\\$1").replace(/_/g, "([^/=?&]+)")}/?$')] in
-        fn[request, response][let[pieces = []][request.on('data', fn[piece][pieces.push(piece)]), request.on('end', fn_[cc(pieces.join(''))])],
-          where*[cc(data)          = match && handlers[method] && handlers[method](context_for(data)), match = path_pattern.exec(request.url), method = request.method.toLowerCase(),
+        fn[request, response][match && handlers[method] && let[pieces = []][request.on('data', fn[piece][pieces.push(piece)]), request.on('end', fn_[cc(pieces.join(''))])],
+          where*[cc(data)          = handlers[method](context_for(data)), match = path_pattern.exec(request.url), method = request.method.toLowerCase(),
                  context_for(data) = {request: request, response: response, post_data: data, post_json: fn_[JSON.parse(data)], $: match,
                                            ok: fn[json]  [response.writeHead(200, {'content-type': 'application/json'}), response.end(JSON.stringify(json))],
                                         error: fn[reason][response.writeHead(500, {'content-type': 'text/plain'}),       response.end(reason)],
                                     not_found: fn[reason][response.writeHead(404, {'content-type': 'text/plain'}),       response.end(reason)]}]]}).
 
     tconfiguration('std error', 'montenegro.http', function () {
+      let[hash_pair = this.parse('_name: _value')] in
       this.configure('montenegro.class.http').rmacro(qs[http[_][_]],
-        fn[path, methods][qs[_service(_path, _handlers)].replace({_service: service, _path: path, _handlers: handlers}),
-          where*[c         = this,
-                 service   = new c.ref(c.montenegro.http.service),
-                 handlers  = new c.ref(let[result = {}][methods.flatten(',').each(fn[x][result[x.name] = x.value]), result]),
-                 method(m) = (match ? {name: match[0].as_escaped_string(), value: context(match[1])} : error.fail[new Error('montenegro.http: invalid service: #{m.serialize()}')],
+        fn[path, methods][qs[_service(_path, _handlers)].replace({_service: service(), _path: path, _handlers: handlers()}),
+          where*[service  = fb_[new this.ref(this.montenegro.http.service)],
+                 handlers = fb_[new this.syntax('{', methods.flatten(',').map(fn[m][hash_pair.replace(method(m))]))],
+                 method   = fb[m][match ? {_name: match[0], _value: context(match[1])} : error.fail[new Error('montenegro.http: invalid service: #{m.serialize()}')],
                    where[match         = m.match(qs[_ = _]),
                          context(tree) = qs[fn[context][_tree, where[$ = context.$, ok = context.ok, error = context.error, not_found = context.not_found, post_data = context.post_data,
-                                                                     post_json = context.post_json, request = context.request, response = context.response]]].replace({_tree: tree})])]])}).
+                                                                     post_json = context.post_json, request = context.request, response = context.response]]].replace({_tree: tree})]]]])}).
 
 Final configuration.
 This configuration bundles all of the configurations together.
