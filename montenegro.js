@@ -64,7 +64,7 @@
                  context_for(data) = {request: request, response: response, post_data: data, post_json: fn_[JSON.parse(data)], $: match,
                                            ok: fn[json]  [response.writeHead(200, {'content-type': 'application/json'}), response.end(JSON.stringify(json))],
                                         error: fn[reason][response.writeHead(500, {'content-type': 'text/plain'}), response.end(reason)],
-                                    not_found: fn[reason][response.writeHead(404, {'content-type': 'text/plain'}), response.end(reason)]}]];
+                                    not_found: fn[reason][response.writeHead(404, {'content-type': 'text/plain'}), response.end(reason)]}]]}).
 
     tconfiguration('std', 'montenegro.http', function () {
       this.configure('montenegro.class.http').rmacro(qs[http[_][_]],
