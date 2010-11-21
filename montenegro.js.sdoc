@@ -66,7 +66,7 @@ HTTP interface to make that happen. You can define a service with the http[] mac
                                         error: fn[reason][response.writeHead(500, {'content-type': 'text/plain'}), response.end(reason)],
                                     not_found: fn[reason][response.writeHead(404, {'content-type': 'text/plain'}), response.end(reason)]}]]}).
 
-    tconfiguration('std', 'montenegro.http', function () {
+    tconfiguration('std montenegro.ref', 'montenegro.http', function () {
       this.configure('montenegro.class.http').rmacro(qs[http[_][_]],
         fn[path, methods][qs[_service(_path, _handlers)].replace({_service: service, _path: path, _handlers: handlers}),
           where*[service   = new caterwaul.ref(montenegro.http.service),
