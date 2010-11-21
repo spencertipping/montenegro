@@ -54,22 +54,23 @@ HTTP interface to make that happen. You can define a service with the http[] mac
     var service = montenegro.http.compose(s1, s2);
     require('http').createServer(service).listen(8080);
 
-    tconfiguration('std seq error', 'montenegro.class.http', function () {
+    tconfiguration('std seq', 'montenegro.class.http', function () {
       this.configure('montenegro.core').montenegro.http = {compose: fn_[let[as = sa<< arguments] in fn[request, response][x(request, response) <se< as]]};
       this.montenegro.http.service(path, handlers) =
-        let*[path_pattern = new RegExp('^#{path.replace(/_/g, "([^/]+)")}/?$')] in
+        let*[path_pattern = new RegExp('^#{path.replace(/[*+?()\[\]]/g, "\\$1").replace(/_/g, "([^/=?&]+)")}/?$')] in
         fn[request, response][let[pieces = []][request.on('data', fn[piece][pieces.push(piece)]), request.on('end', cc(pieces.join('')))],
           where*[cc(data)          = match && handlers[method] && handlers[method](context_for(data)), match = path_pattern.exec(request.url), method = request.method.toLowerCase(),
                  context_for(data) = {request: request, response: response, post_data: data, post_json: fn_[JSON.parse(data)], $: match,
                                            ok: fn[json]  [response.writeHead(200, {'content-type': 'application/json'}), response.end(JSON.stringify(json))],
-                                        error: fn[reason][response.writeHead(500, {'content-type': 'text/plain'}), response.end(reason)],
-                                    not_found: fn[reason][response.writeHead(404, {'content-type': 'text/plain'}), response.end(reason)]}]]}).
+                                        error: fn[reason][response.writeHead(500, {'content-type': 'text/plain'}),       response.end(reason)],
+                                    not_found: fn[reason][response.writeHead(404, {'content-type': 'text/plain'}),       response.end(reason)]}]]}).
 
-    tconfiguration('std montenegro.ref', 'montenegro.http', function () {
+    tconfiguration('std error', 'montenegro.http', function () {
       this.configure('montenegro.class.http').rmacro(qs[http[_][_]],
         fn[path, methods][qs[_service(_path, _handlers)].replace({_service: service, _path: path, _handlers: handlers}),
-          where*[service   = new caterwaul.ref(montenegro.http.service),
-                 handlers  = new caterwaul.ref(let[result = {}][methods.flatten(',').each(fn[x][result[x.name] = x.value]), result]),
+          where*[c         = this,
+                 service   = new c.ref(c.montenegro.http.service),
+                 handlers  = new c.ref(let[result = {}][methods.flatten(',').each(fn[x][result[x.name] = x.value]), result]),
                  method(m) = (match ? {name: match[0].as_escaped_string(), value: context(match[1])} : error.fail[new Error('montenegro.http: invalid service: #{m.serialize()}')],
                    where[match         = m.match(qs[_ = _]),
                          context(tree) = qs[fn[context][_tree, where[$ = context.$, ok = context.ok, error = context.error, not_found = context.not_found, post_data = context.post_data,
