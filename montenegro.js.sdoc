@@ -11,7 +11,7 @@ Node.js variables and Montenegro reference.
 Caterwaul has a problem with node.js variables. Specifically, code that it compiles can't reach the 'require' variable, which ends up being really important. To fix this, Montenegro binds that
 variable within any compiled function by using a macro.
 
-   configuration('montenegro.core',           function () {this.shallow('montenegro', {require: require})}).
+   configuration('montenegro.core',           function () {this.field('montenegro', {require: require})}).
   tconfiguration('std', 'montenegro.require', function () {this.configure('montenegro.core').macro(qs[require],    let[ref = new this.ref(this.montenegro.require)] in fn_[ref])}).
   tconfiguration('std', 'montenegro.ref',     function () {this.configure('montenegro.core').macro(qs[montenegro], let[ref = new this.ref(this.montenegro)]         in fn_[ref])}).
 
