@@ -55,8 +55,7 @@ HTTP interface to make that happen. You can define a service with the http[] mac
     require('http').createServer(service).listen(8080);
 
     tconfiguration('std seq error', 'montenegro.class.http', function () {
-      this.montenegro.http = {};
-      this.montenegro.http.compose = fn_[let[as = sa<< arguments] in fn[request, response][x(request, response) <se< as]];
+      this.configure('montenegro.core').montenegro.http = {compose: fn_[let[as = sa<< arguments] in fn[request, response][x(request, response) <se< as]]};
       this.montenegro.http.service(path, handlers) =
         let*[path_pattern = new RegExp('^#{path.replace(/_/g, "([^/]+)")}/?$')] in
         fn[request, response][let[pieces = []][request.on('data', fn[piece][pieces.push(piece)]), request.on('end', cc(pieces.join('')))],
