@@ -58,7 +58,7 @@ HTTP interface to make that happen. You can define a service with the http[] mac
       this.configure('montenegro.core').montenegro.http = {compose: fn_[let[as = sa<< arguments] in fn[request, response][x(request, response) <se< as]]};
       this.montenegro.http.service(path, handlers) =
         let*[path_pattern = new RegExp('^#{path.replace(/[*+?()\[\]]/g, "\\$1").replace(/_/g, "([^/=?&]+)")}/?$')] in
-        fn[request, response][let[pieces = []][request.on('data', fn[piece][pieces.push(piece)]), request.on('end', cc(pieces.join('')))],
+        fn[request, response][let[pieces = []][request.on('data', fn[piece][pieces.push(piece)]), request.on('end', fn_[cc(pieces.join(''))])],
           where*[cc(data)          = match && handlers[method] && handlers[method](context_for(data)), match = path_pattern.exec(request.url), method = request.method.toLowerCase(),
                  context_for(data) = {request: request, response: response, post_data: data, post_json: fn_[JSON.parse(data)], $: match,
                                            ok: fn[json]  [response.writeHead(200, {'content-type': 'application/json'}), response.end(JSON.stringify(json))],
