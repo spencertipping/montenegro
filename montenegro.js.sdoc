@@ -5,20 +5,56 @@ Introduction.
 Montenegro extends Caterwaul (http://spencertipping.com/caterwaul) to operate in a node.js environment and provide REST web services. It provides asynchronous connectors, stream transformers,
 URL routing, and some other utilities that make non-blocking servers easier to develop.
 
-  montenegro =
+  caterwaul.
 
-Node.js variables.
+Node.js variables and Montenegro reference.
 Caterwaul has a problem with node.js variables. Specifically, code that it compiles can't reach the 'require' variable, which ends up being really important. To fix this, Montenegro binds that
 variable within any compiled function by using a macro.
 
-  caterwaul.configuration('montenegro.require_reference', function () {this.field('node_require', require)}).
-           tconfiguration('std', 'montenegro.require',    function () {this.macro(qs[require], fn_[new this.ref(caterwaul.node_require)])}).
+   configuration('montenegro.core',           function () {this.shallow('montenegro', {require: require})}).
+  tconfiguration('std', 'montenegro.require', function () {this.configure('montenegro.core').macro(qs[require],    let[ref = new this.ref(this.montenegro.node_require)] in fn_[ref])}).
+  tconfiguration('std', 'montenegro.ref',     function () {this.configure('montenegro.core').macro(qs[montenegro], let[ref = new this.ref(this.montenegro)]              in fn_[ref])}).
 
-Asynchronous connectors.
-Node programs often stream things, but sometimes convert those streams to whole pieces of data. This macro/function layer provides relatively simple ways of doing that. The idea is that there
-are a bunch of small combinators to transform streams in various ways. By composing them you can construct stream operators that let you do most things in point-free style.
+REST wrapper.
+Most applications do (or should) use a REST API for data management. Standard resources can be addressed by Montenegro clients using wrapper functions; this interface provides the server-side
+HTTP interface to make that happen. You can define a service with the http[] macro, or longhand with the 'new montenegro.http.service()' constructor.
+
+  Defining services.
+  The most obvious case is to provide a GET/POST service that is tied to a database (Montenegro doesn't use PUT or DELETE, though I may add them later). Here's what that looks like:
+
+  | var db = caterwaul.db.file('some-directory');
+    var service = http[get  /people/_ << db($[1])(ok),
+                       post /people/_ << db($[1])(post_json())(ok)];
+    require('http').createServer(fn[req, res][service(req, res)]).listen(8080);
+
+  Equivalently, you can use the value-space constructor to get a first-class path (which may be more useful if you want to create a bunch of services with similar behaviors):
+
+  | var service = montenegro.http.service('/people/_',
+                    {get: fn[context][db(context.$[1])(context.ok)],
+                    post: fn[context][db(context.$[1])(context.post_json())(context.ok)]});
+
+  You get these variables within the context of a service definition:
+
+  | 1. The URL match-group variable, $ -- the value returned from the constructed regexp's .exec() method. Each '_' in the URL is a wildcard.
+    2. ok(): a function that returns 200 OK with the JSON object given.
+    3. error(): a function that replies with 500 and a string message if you give it one.
+    4. not_found(): a function that replies with 404 and a string message if you give it one.
+    5. post_data() and post_json() (for POSTs) -- functions that return the original string POST-data and JSON-decoded POST-data, respectively.
+    6. request: the original HTTP request object.
+    7. response: the original HTTP response object.
+
+  You can compose services by calling each one in succession:
+
+  | var s1 = http[...], s2 = http[...];
+    require('http').createServer(fn[req, res][s1(req, res), s2(req, res)]).listen(8080);
+
+  Because writing this code gets old quickly, you can use a service-composition function:
+
+  | var s1 = http[...], s2 = http[...];
+    var service = montenegro.http.compose(s1, s2);
+    require('http').createServer(service).listen(8080);
 
 Final configuration.
-This configuration bundles together all of the modules to form the 'montenegro' function.
+This configuration bundles all of the configurations together.
 
-  configuration('montenegro', function () {this.configure('montenegro.require_reference montenegro.require')}).clone('montenegro');
+  configuration('montenegro', function () {this.configure('montenegro.require')});
