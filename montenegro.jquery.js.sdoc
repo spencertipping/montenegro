@@ -109,7 +109,7 @@ Here's what it looks like using Montenegro markup syntax (triggered with the htm
               node_attributes(e, as) = qs[_e.se(fn_[_as])].replace({_e: e, _as: as.flatten(',').map(fn[a][qs[this.attr(_name, _value)].replace({_name: ref(a[0].data), _value: a[1]})])}),
 
               append_single(node, c) = c.force ? node.append(x) <se< c : node.append(c.constructor === String ? document.createTextNode(c) : c),
-              append_multiple(node)  = (x && append_single(node, x)) <se< sa<< Array.prototype.slice.call(arguments, 1) && node,
+              append_multiple(node)  = (x !== null && x !== undefined && append_single(node, x)) <se< sa<< Array.prototype.slice.call(arguments, 1) && node,
 
               html_expand(tree)      = tree && let[m = tree.match(qs[_/_])][m ? qs[_e._f].replace({_e: html_expand(m[0]), _f: m[1]}) :
                                                   (m = tree.match(qs[_._]))   ? qs[_e.addClass(_c)].replace({_e: html_expand(m[0]), _c: ref(m[1].data)}) :
