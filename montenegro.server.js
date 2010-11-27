@@ -48,19 +48,20 @@
 // | response /se[_.writeHead(200, {'content-type': 'text/html'}),
 //                _.end(montenegro.html(fn_[$('body').append( html<< h1('Hello world!'))]))];
 
-// This builds a client page that loads caterwaul.all.js, montenegro.client.js, and jQuery. It assumes that your scripts are accessible via /scripts/caterwaul.all.js,
-// /scripts/montenegro.client.js, and the Google CDN for jQuery 1.4.4. These assumptions can be changed by changing script_path and jquery_path.
+// This builds a client page that loads caterwaul.all.js, montenegro.client.js, and jQuery. By default, caterwaul.all.js and montenegro.jquery.js come from my webserver (which sometimes is down),
+// but you can change where it finds these scripts by setting _.html.script_path and _.html.jquery_path.
 
   tconfiguration('std', 'montenegro.html', function () {
     this.configure('montenegro.core').montenegro /se[
-      _.html(f) = let*[html_header()       = let[s(src) = '<script src="#{src}"></script>', sp = _.script_path] in
-                                             '<!doctype html><html><head>#{s(sp + "/caterwaul.all.js")}#{s(sp + "/montenegro.client.js")}#{s(_.jquery_path + "/jquery.js")}',
-                       wrap_initializer(s) = '<script>$(caterwaul.clone("std continuation seq montenegro")(#{s}))</script>',
+      _.html(f) = let*[html_header()       = let[s(src) = '<script src="#{src}"></script>'] in
+                                             '<!doctype html><html><head>#{s(_.html.jquery_path)}#{s(_.html.caterwaul_path)}#{s(_.html.montenegro_path)}',
+                       wrap_initializer(s) = '<script>$(caterwaul.clone("std opt continuation seq montenegro")(#{s}))</script>',
                        html_footer()       = '</head><body></body></html>'] in
                   html_header() + wrap_initializer(f.toString()) + html_footer(),
 
-      _.html /se[_.script_path = '/scripts',
-                 _.jquery_path = 'http://ajax.googleapis.com/ajax/libs/jquery/1.4.4']]}).
+      _.html /se[_.caterwaul_path  = 'http://spencertipping.com/caterwaul/caterwaul.all.js',
+                 _.montenegro_path = 'http://spencertipping.com/montenegro/montenegro.client.js',
+                 _.jquery_path     = 'http://ajax.googleapis.com/ajax/libs/jquery/1.4.4']]}).
 
 // RPC endpoints.
 // You can create an RPC service on a URL. The RPC endpoint wraps the function in a CPS-converted HTTP request/response proxy that listens for POST requests on a given URL, expects a JSON array
@@ -89,12 +90,14 @@
          json_to  (response)()  = let[as = Array.prototype.slice.call(arguments)] in response /se[_.writeHead(200, {'content-type': 'application/json'}), _.end(JSON.stringify(as))],
          error_to (response)(e) = response /se[_.writeHead(400, {'content-type': 'text/plain'}), _.end(e.toString())],
 
-         install_service(url, doc, fn, rpc) = this /se[_.on(url, 'POST', fn[req, res][json_from(req, rpc)(fn[json][fn.apply(json_to(res), json /se[console.log(_)])])]),
+         install_service(url, doc, fn, rpc) = this /se[_.on(url, 'POST', fn[req, res][json_from(req, rpc)(fn[json][fn.apply(json_to(res), json)])]),
                                                        _.on(url, 'GET',  fn[req, res][res /se[_.writeHead(200, {'content-type': 'text/plain'}), _.end(doc)]])],
 
-         install_test_page(url, rpc) = this /se[_.on('#{url}/test', 'GET', fn[req, res][res /se[_.writeHead(200, {'content-type': 'text/html'}), _.end(rpc.testpage())]])]] in
+         install_test_page(url, rpc) = this /se[_.on('#{url}/test', 'GET', fn[req, res][res /se[_.writeHead(200, {'content-type': 'text/html'}), _.end(rpc.testpage())]])],
 
-    this.configure('montenegro.server montenegro.html').montenegro.server.extensions /se[
+         html = this.configure('montenegro.html').montenegro.html] in
+
+    this.configure('montenegro.server').montenegro.server.extensions /se[
       _.rpc(url, _documentation, _fn) = (install_service.call(this, url, documentation, fn, _.rpc), install_test_page.call(this, url, _.rpc),
                                          where[documentation = _fn ? _documentation : '#{url} service (no documentation available)', fn = _fn || _documentation]),
 
@@ -109,11 +112,21 @@
 //   requests to the RPC to verify that it's working correctly. This is enabled in production-mode as well as development mode; it's my attempt to encode Kerckhoffs' principle
 //   (http://en.wikipedia.org/wiki/Kerckhoffs'_principle) into the framework to prevent bad security decisions.
 
-      _.rpc.testpage() = this.montenegro.html(fn_[$('body').append( html<< h1('Test page'))])]}).
+      _.rpc.testpage() = html(fn_[$('body').append( html<< h1('Test page'))])]}).
+
+// HTML server configuration.
+// You can send HTML pages to the client by writing initialization functions. To send a hello world page, for example:
+
+// | montenegro.server(8080).html('/hello', fn_[$('body').append( html<< h1('Hello world!'))]);
+
+  tconfiguration('std', 'montenegro.server.html', function () {
+    let[html = this.configure('montenegro.html').montenegro.html] in
+    this.configure('montenegro.server').montenegro.server.extensions /se[
+      _.html(url, f) = let[s = html(f)] in this /se[_.on(url, 'GET', fn[req, res][res /se[_.writeHead(200, {'content-type': 'text/html'}), _.end(s)]])]]}).
 
 // Final configuration.
 // This configuration bundles all of the configurations together.
 
-  configuration('montenegro', function () {this.configure('montenegro.html montenegro.route.url montenegro.server montenegro.server.rpc')});
+  configuration('montenegro', function () {this.configure('montenegro.html montenegro.route.url montenegro.server montenegro.server.rpc montenegro.server.html')});
 
 // Generated by SDoc 
