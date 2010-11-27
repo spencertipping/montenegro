@@ -10,9 +10,7 @@ Node.js variables and Montenegro reference.
 Caterwaul has a problem with node.js variables. Specifically, code that it compiles can't reach the 'require' variable, which ends up being really important. To fix this, Montenegro binds that
 variable within any compiled function by using a macro.
 
-   configuration('montenegro.core',       function () {this.field('montenegro', {require: require})}).
-  tconfiguration('std', 'montenegro.ref', function () {this.configure('montenegro.core').macro(qs[montenegro], new this.ref(this.montenegro)         /re[fn_[_]]).
-                                                                                         macro(qs[require],    new this.ref(this.montenegro.require) /re[fn_[_]])}).
+   configuration('montenegro.core', function () {this.shallow('montenegro', {require: require})}).
 
 URL router.
 Montenegro gives you a quick proxy function to route requests based on URL patterns. This makes a suitable server if you want to promote it into one (and in fact it is the function you get
@@ -30,18 +28,17 @@ Because routers provide the same interface they accept, you can nest them and cr
                            _.on(pattern, method, handler) = this /se[_.handlers.push({url: pattern, method: method, handler: handler})],
                            _.not_found(request, response) = response /se[_.writeHead(404), _.end('#{request.url} was not found.')],
 
-                           _.handler_for(url)             = seq[this.handlers %[(_.url.test ? _.url.test(request.url) : _.url === request.url) && _.method === request.method] *[_.handler]][0],
-                           _.route(request, response)     = (this.handler_for(request.url) || this.not_found).call(this, request, response)]],
+                           _.handler_for(url, method)     = seq[this.handlers %[(_.url.test ? _.url.test(url) : _.url === url) && _.method === method] *[_.handler]][0],
+                           _.route(request, response)     = this /se[(_.handler_for(request.url, request.method) || _.not_found).call(_, request, response)]]],
                 where*[result(request, response) = result.route(request, response)]]}).
 
 Server construction.
 You construct a Montenegro server instance by calling montenegro.server(port). The server starts running immediately. Each server has an internal routing table that maps URL patterns to
-request handlers. (A request handler is just a function that Node's createServer would accept.) Servers respond by invoking their not_found handler, which defaults to returning 404 and a short
-message.
+request handlers. (A request handler is just a function that Node's createServer would accept.)
 
-  tconfiguration('std seq montenegro.ref', 'montenegro.server', function () {
-    this.configure('montenegro.core montenegro.route.url').montenegro /se[
-      _.server(port)      = caterwaul.util.merge(_.route.url(), _.server.extensions) /se[require('http').createServer(_).listen(port, '0.0.0.0')],
+  tconfiguration('std seq', 'montenegro.server', function () {
+    let[require = this.configure('montenegro.core').montenegro.require] in this.configure('montenegro.route.url').montenegro /se[
+      _.server(port)      = caterwaul.util.merge(_.route.url(), _.server.extensions) /se[require('http').createServer(_).listen(port || 8080, '0.0.0.0')],
       _.server.extensions = {}]}).
 
 Trivial HTML construction.
@@ -87,28 +84,34 @@ RPC services can provide documentation. This is an optional second parameter, e.
 Any clients who GET the URL will be served the documentation string as plain text. If you don't specify any documentation, GET requests will be sent a generic 'there's a service here, but no
 documentation for it' message as plain text. The service will also send potentially useful diagnostic messages with 400 error codes if you're using it incorrectly.
 
+  tconfiguration('std continuation', 'montenegro.server.rpc', function () {
+    let*[json_from(request, rpc)(cc) = request /se[_.on('data', pieces/mb/push), _.on('end', fn_[unwind_protect[rpc.error(e)][cc(JSON.parse(pieces.join('')))]]), where[pieces = []]],
+         json_to  (response)()  = let[as = Array.prototype.slice.call(arguments)] in response /se[_.writeHead(200, {'content-type': 'application/json'}), _.end(JSON.stringify(as))],
+         error_to (response)(e) = response /se[_.writeHead(400, {'content-type': 'text/plain'}), _.end(e.toString())],
+
+         install_service(url, doc, fn, rpc) = this /se[_.on(url, 'POST', fn[req, res][json_from(req, rpc)(fn[json][fn.apply(json_to(res), json)])]),
+                                                       _.on(url, 'GET',  fn[req, res][res /se[_.writeHead(200, {'content-type': 'text/plain'}), _.end(doc)]])],
+
+         install_test_page(url, rpc) = this /se[_.on('#{url}/test', 'GET', fn[req, res][res /se[_.writeHead(200, {'content-type': 'text/html'}), _.end(rpc.testpage())]])]] in
+
+    this.configure('montenegro.server montenegro.html').montenegro.server.extensions /se[
+      _.rpc(url, _documentation, _fn) = (install_service.call(this, url, documentation, fn, _.rpc), install_test_page.call(this, url, _.rpc),
+                                         where[documentation = _fn ? _documentation : '#{url} service (no documentation available)', fn = _fn || _documentation]),
+
+  Error trapping.
+  If an error occurs, the client receives the toString() produced by the error object and a stack trace is logged to the console. However, you may want to do something different. If you do,
+  change montenegro.server.rpc.error(e).
+
+      _.rpc.error(e) = e /se[console.log(_)],
+
   Test pages.
   If you use the server as shown above, you'll get a test page for each RPC endpoint. For example, the test page for the '/chat' URL is '/chat/test'. You can navigate to this page and send
   requests to the RPC to verify that it's working correctly. This is enabled in production-mode as well as development mode; it's my attempt to encode Kerckhoffs' principle
   (http://en.wikipedia.org/wiki/Kerckhoffs'_principle) into the framework to prevent bad security decisions.
 
-    tconfiguration('std continuation', 'montenegro.server.rpc', function () {
-      let*[json_from(request)(cc) = request  /se[_.on('data', pieces/mb/push), _.on('end', fn_[unwind_protect[cc(e)][cc(null, JSON.parse(pieces.join('')))]]), where[pieces = []]],
-           json_to  (response)()  = (response.writeHead(200, {'content-type': 'application/json'}), response.end(JSON.stringify(Array.prototype.slice.call(arguments)))),
-           error_to (response)(e) = response /se[_.writeHead(400, {'content-type': 'text/plain'}), _.end(e.toString())],
-
-           install_rpc_service(url, doc, fn) = this /se[_.on(url, 'POST', fn[req, res][json_from(req)(fn[json][unwind_protect[error_to(res)(e)][fn.apply(json_to(res), json)]])]),
-                                                        _.on(url, 'GET',  fn[req, res][res /se[_.writeHead(200, {'content-type': 'text/plain'}), _.end(doc)]])],
-
-           install_test_page(url, rpc) = this /se[_.on('#{url}/test', 'GET', fn[req, res][res /se[_.writeHead(200, {'content-type': 'text/html'}), _.end(rpc.testpage())]])]] in
-
-      this.configure('montenegro.server montenegro.html').montenegro.server.extensions /se[
-        _.rpc(url, _documentation, _fn) = (install_rpc_service.call(this, url, documentation, fn), install_test_page.call(this, url, _.rpc),
-                                           where[documentation = _fn ? _documentation : '#{url} service (no documentation available)', fn = _fn || _documentation]),
-
-        _.rpc.testpage() = this.montenegro.html(fn_[$('body').append( html<< h1('Test page'))])]}).
+      _.rpc.testpage() = this.montenegro.html(fn_[$('body').append( html<< h1('Test page'))])]}).
 
 Final configuration.
 This configuration bundles all of the configurations together.
 
-  configuration('montenegro', function () {this.configure('montenegro.ref montenegro.html montenegro.route.url montenegro.server montenegro.server.rpc')});
+  configuration('montenegro', function () {this.configure('montenegro.html montenegro.route.url montenegro.server montenegro.server.rpc')});

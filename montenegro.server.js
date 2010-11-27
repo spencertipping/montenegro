@@ -10,9 +10,57 @@
 // Caterwaul has a problem with node.js variables. Specifically, code that it compiles can't reach the 'require' variable, which ends up being really important. To fix this, Montenegro binds that
 // variable within any compiled function by using a macro.
 
-   configuration('montenegro.core',           function () {this.field('montenegro', {require: require})}).
-  tconfiguration('std', 'montenegro.require', function () {this.configure('montenegro.core').macro(qs[require],    new this.ref(this.montenegro.require) /re[fn_[_]])}).
-  tconfiguration('std', 'montenegro.ref',     function () {this.configure('montenegro.core').macro(qs[montenegro], new this.ref(this.montenegro)         /re[fn_[_]])}).
+   configuration('montenegro.core', function () {this.shallow('montenegro', {require: require})}).
+
+// URL router.
+// Montenegro gives you a quick proxy function to route requests based on URL patterns. This makes a suitable server if you want to promote it into one (and in fact it is the function you get
+// back when you create a new server). Configuration is done like this:
+
+// | var router = montenegro.route.url();
+//   router.on('/foo', 'GET', fn[request, response][response /se[_.writeHead(200), _.end('bar')]]);
+//   router.not_found(request, response) = response /se[_.writeHead(404), _.end('Bummer dude, not found')];
+
+// Because routers provide the same interface they accept, you can nest them and create proxies.
+
+  tconfiguration('std seq', 'montenegro.route.url', function () {
+    this.configure('montenegro.core').montenegro /se[(_.route = _.route || {}) /se[
+      _.url() = result /se[_.handlers                     = seq[~[]],
+                           _.on(pattern, method, handler) = this /se[_.handlers.push({url: pattern, method: method, handler: handler})],
+                           _.not_found(request, response) = response /se[_.writeHead(404), _.end('#{request.url} was not found.')],
+
+                           _.handler_for(url, method)     = seq[this.handlers %[(_.url.test ? _.url.test(url) : _.url === url) && _.method === method] *[_.handler]][0],
+                           _.route(request, response)     = this /se[(_.handler_for(request.url, request.method) || _.not_found).call(_, request, response)]]],
+                where*[result(request, response) = result.route(request, response)]]}).
+
+// Server construction.
+// You construct a Montenegro server instance by calling montenegro.server(port). The server starts running immediately. Each server has an internal routing table that maps URL patterns to
+// request handlers. (A request handler is just a function that Node's createServer would accept.)
+
+  tconfiguration('std seq', 'montenegro.server', function () {
+    let[require = this.configure('montenegro.core').montenegro.require] in this.configure('montenegro.route.url').montenegro /se[
+      _.server(port)      = caterwaul.util.merge(_.route.url(), _.server.extensions) /se[require('http').createServer(_).listen(port || 8080, '0.0.0.0')],
+      _.server.extensions = {}]}).
+
+// Trivial HTML construction.
+// This gives you a quick way to throw a page together. The key here is that you write a function that will end up being executed on the client-side when jQuery loads. For example, to say hello
+// world:
+
+// | response /se[_.writeHead(200, {'content-type': 'text/html'}),
+//                _.end(montenegro.html(fn_[$('body').append( html<< h1('Hello world!'))]))];
+
+// This builds a client page that loads caterwaul.all.js, montenegro.client.js, and jQuery. It assumes that your scripts are accessible via /scripts/caterwaul.all.js,
+// /scripts/montenegro.client.js, and the Google CDN for jQuery 1.4.4. These assumptions can be changed by changing script_path and jquery_path.
+
+  tconfiguration('std', 'montenegro.html', function () {
+    this.configure('montenegro.core').montenegro /se[
+      _.html(f) = let*[html_header()       = let[s(src) = '<script src="#{src}"></script>', sp = _.script_path] in
+                                             '<!doctype html><html><head>#{s(sp + "/caterwaul.all.js")}#{s(sp + "/montenegro.client.js")}#{s(_.jquery_path + "/jquery.js")}',
+                       wrap_initializer(s) = '<script>$(caterwaul.clone("std continuation seq montenegro")(#{s}))</script>',
+                       html_footer()       = '</head><body></body></html>'] in
+                  html_header() + wrap_initializer(f.toString()) + html_footer(),
+
+      _.html /se[_.script_path = '/scripts',
+                 _.jquery_path = 'http://ajax.googleapis.com/ajax/libs/jquery/1.4.4']]}).
 
 // RPC endpoints.
 // You can create an RPC service on a URL. The RPC endpoint wraps the function in a CPS-converted HTTP request/response proxy that listens for POST requests on a given URL, expects a JSON array
@@ -20,22 +68,52 @@
 // the reply object.
 
 // All listeners are CPS-converted, so you can have coroutine-based communication between the client and server. For example, this is a broadcast chat server (which relies on singly re-entrant
-// continuations for replies):
+// continuations for replies, if you want to think about it as a regular procedure call):
 
-// | var clients = seq[~[]];
-//   montenegro.rpc('/chat', fn_[clients.push(this)]);
-//   montenegro.rpc('/chat/send', fn[message][seq[clients *![_(message)], clients = ~[]], this('OK')]);
+// | var chat_service = montenegro.server(8080);
+//   var clients = seq[~[]];
+//   chat_service.rpc('/chat',      fn_[clients.push(this)]);
+//   chat_service.rpc('/chat/send', fn[message][seq[clients *![_(message)], clients = ~[]], this('OK')]);
 
-// The client code would look like this:
+// The client code for this example is in montenegro.client.js.sdoc.
 
-// | var send = montenegro.rpc('/chat/send');
-//   var chat = montenegro.rpc('/chat');
-//   let*[listen() = let/cps[message <- chat(_)][console.log(message), listen()]] in listen();
-//   let/cps[_ <- $('#send').click(_)][send($('#textbox').val())];
+// RPC services can provide documentation. This is an optional second parameter, e.g:
+
+// | chat_service.rpc('/chat', 'Clients should long-loop this URL to be notified of messages that are sent.', fn_[...]);
+
+// Any clients who GET the URL will be served the documentation string as plain text. If you don't specify any documentation, GET requests will be sent a generic 'there's a service here, but no
+// documentation for it' message as plain text. The service will also send potentially useful diagnostic messages with 400 error codes if you're using it incorrectly.
+
+  tconfiguration('std continuation', 'montenegro.server.rpc', function () {
+    let*[json_from(request, rpc)(cc) = request /se[_.on('data', pieces/mb/push), _.on('end', fn_[unwind_protect[rpc.error(e)][cc(JSON.parse(pieces.join('')))]]), where[pieces = []]],
+         json_to  (response)()  = let[as = Array.prototype.slice.call(arguments)] in response /se[_.writeHead(200, {'content-type': 'application/json'}), _.end(JSON.stringify(as))],
+         error_to (response)(e) = response /se[_.writeHead(400, {'content-type': 'text/plain'}), _.end(e.toString())],
+
+         install_service(url, doc, fn, rpc) = this /se[_.on(url, 'POST', fn[req, res][json_from(req, rpc)(fn[json][fn.apply(json_to(res), json /se[console.log(_)])])]),
+                                                       _.on(url, 'GET',  fn[req, res][res /se[_.writeHead(200, {'content-type': 'text/plain'}), _.end(doc)]])],
+
+         install_test_page(url, rpc) = this /se[_.on('#{url}/test', 'GET', fn[req, res][res /se[_.writeHead(200, {'content-type': 'text/html'}), _.end(rpc.testpage())]])]] in
+
+    this.configure('montenegro.server montenegro.html').montenegro.server.extensions /se[
+      _.rpc(url, _documentation, _fn) = (install_service.call(this, url, documentation, fn, _.rpc), install_test_page.call(this, url, _.rpc),
+                                         where[documentation = _fn ? _documentation : '#{url} service (no documentation available)', fn = _fn || _documentation]),
+
+//   Error trapping.
+//   If an error occurs, the client receives the toString() produced by the error object and a stack trace is logged to the console. However, you may want to do something different. If you do,
+//   change montenegro.server.rpc.error(e).
+
+      _.rpc.error(e) = e /se[console.log(_)],
+
+//   Test pages.
+//   If you use the server as shown above, you'll get a test page for each RPC endpoint. For example, the test page for the '/chat' URL is '/chat/test'. You can navigate to this page and send
+//   requests to the RPC to verify that it's working correctly. This is enabled in production-mode as well as development mode; it's my attempt to encode Kerckhoffs' principle
+//   (http://en.wikipedia.org/wiki/Kerckhoffs'_principle) into the framework to prevent bad security decisions.
+
+      _.rpc.testpage() = this.montenegro.html(fn_[$('body').append( html<< h1('Test page'))])]}).
 
 // Final configuration.
 // This configuration bundles all of the configurations together.
 
-  configuration('montenegro', function () {this.configure('montenegro.require montenegro.ref montenegro.http')});
+  configuration('montenegro', function () {this.configure('montenegro.html montenegro.route.url montenegro.server montenegro.server.rpc')});
 
 // Generated by SDoc 

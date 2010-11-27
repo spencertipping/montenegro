@@ -298,10 +298,10 @@ __3c6177256de0fddb721f534c3ad8c0ee
 meta::data('main', '');
 meta::data('name', 'montenegro');
 meta::data('quiet', '1');
-meta::data('sources', <<'__8b1eed5be1d61b88d47e8df86fd89416');
+meta::data('sources', <<'__4ce1e6d3415b2c4a1e1a8aac7040ff36');
 # The source files for your program -- all except the server process:
-montenegro.js
-__8b1eed5be1d61b88d47e8df86fd89416
+montenegro.server.js
+__4ce1e6d3415b2c4a1e1a8aac7040ff36
 
 meta::data('watching', '1');
 meta::function('cat', 'join "\\n", retrieve(@_);');
@@ -461,7 +461,7 @@ eval join '', <STDIN>;
 die $@ if $@;
 __4c7139ed5c9f65f38a33cf8f8a6cae27
 
-meta::function('init', <<'__ab0fb510f67aa624ce16bb5ac5a86c6d');
+meta::function('init', <<'__47e283d427716d54172f29108c6cabfb');
 # Skeletal directories
 mkdir for qw/bin lib src test/;
 
@@ -493,14 +493,14 @@ EOF
 file::write('test/a-test.js.sdoc', <<EOF, noclobber => 1);
 A sample unit test
 
-caterwaul.clone('std', 'error')(function () {
-  hello_world_message === 'Hello world' || error.fail['Wrong message'];
+caterwaul.clone('std')(function () {
+  hello_world_message === 'Hello world' || null['Wrong message'];
 })();
 EOF
 
 # Preload libraries
 lib();
-__ab0fb510f67aa624ce16bb5ac5a86c6d
+__47e283d427716d54172f29108c6cabfb
 
 meta::function('lib', <<'__e99e47d9a652b2b7f20a290a8133bc6f');
 # Regenerates lib/ directory
@@ -727,15 +727,18 @@ $hash = fast_hash("$data{$_}|$hash") for @keys;
 $hash;
 __e17520e3a5d81d788ae995fd8ac47cb9
 
-meta::function('test', <<'__6186a423474620ecce51c2a54367c331');
+meta::function('test', <<'__ea30e1e2f7cb5bb44277a6bd47508dba');
 # Runs your program on each unit test and keeps track of the return codes.
+# If arguments are specified, tests starting with those patterns are run.
 generate();
 hook('bin/before-test');
 
 my @log;
 my $failures = 0;
 
-for (<test/*.js>) {
+my @tests = @_ ? map <test/$_*.js>, @_ : <test/*.js>;
+
+for (@tests) {
   hook('bin/before-test-case', $_);
   terminal::message('test', "starting test $_");
   my $status = node(dependencies(), $_);
@@ -749,7 +752,7 @@ file::write('.test-log', join "\n", @log);
 terminal::message('error', "$failures test(s) failed") if $failures;
 hook('bin/after-test');
 $failures;
-__6186a423474620ecce51c2a54367c331
+__ea30e1e2f7cb5bb44277a6bd47508dba
 
 meta::function('unlock', 'chmod_self(sub {$_[0] | 0200});');
 meta::function('update', '&{\'update-from\'}(@_, grep s/^parent:://o, sort keys %data);');
