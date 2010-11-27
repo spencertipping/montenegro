@@ -16,24 +16,40 @@
 // JQuery extension methods.
 // These are used throughout Montenegro.
 
-  tconfiguration('std', 'montenegro.jquery.methods', function () {$.fn.se(f) = (f.call(this, this), this)}).
+  tconfiguration('std', 'montenegro.jquery.methods', function () {$.fn.se(f) = this /se[f.call(_, _)]}).
 
 //   Event extensions.
 //   Some events are common enough that it's useful to have a handler for them. Hitting the enter key is one of those:
 
     tconfiguration('std', 'montenegro.jquery.events', function () {$.fn.enter(f) = this.keyup(fn[e][e.which === 13 && f.call(this, e)])}).
 
+// RPC tunneling.
+// You can connect to a server endpoint with a CPS-converted proxy function. You can also send opaque references to the server (presumably so that it can send them back). Here's an example of
+// passing a DOM node:
+
+// | var identity = montenegro.rpc('/identity-function');
+//   var body     = $('body');
+//   identity(montenegro.rpc.ref(body), fn[result][montenegro.rpc.ref(result).append('Got the body element back')]);
+//   // alternatively:
+//   let/cps[result <- identity(montenegro.rpc.ref(dom_node), _)][montenegro.rpc.ref(result).append('Got the body element back')];
+
+// Assuming that the server replies with the data it was given, this will append some text to the document body when the server replies. The mechanism for this is actually really simple;
+// montenegro.rpc.ref() just assigns a new gensym to each value you alias; that string goes to the server and is later resolved back into the client-side value. (This is why the server won't be
+// able to do anything useful with the value.) Montenegro automatically garbage-collects the reference table.
+
+//   
+
 // DOM construction.
 // You can build elements using a CSS-selector-style syntax. (Alternatively, you can provide an element in the markup; if you do it this way, the template element's ID should match the model
 // name.) So, for example, suppose we're modeling a person with a name and e-mail address. Here's what the markup might look like in HTML:
 
 // | <div id='person' class='person'>
-//     <input class='name nonempty' />
-//     <input class='email' />
+//     <label for='name1'>Name:</label>
+//     <input id='name1' class='name nonempty' />
+//     <label for='email1'>Email:</label>
+//     <input id='email1' class='email' />
 //     <a class='facebook' href='http://facebook.com/someone'>A Facebook Page</a>
 //   </div>
-
-// Here's what it looks like using Montenegro markup syntax (triggered with the html<< operator):
 
 // | html<< div.person(input.name.nonempty, input.email, a.facebook[href='http://facebook.com/someone']('A Facebook Page'))
 
