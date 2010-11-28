@@ -125,7 +125,7 @@
       this.configure('montenegro.core montenegro.methods').montenegro /se[
       let[$ = _.$, document = _.document, ps = seq[~[]]][_.dom = {} /se[
         _.define_pattern(pattern, expansion) = _.define_pattern /se[ps.push([pattern, expansion])],
-        _.expand(tree) = call/cc[opt.unroll[i, ps.length][let*[p = ps[ps.length - (i + 1)], m = tree.match(p[0])][cc(p[1].apply(tree, m)) || tree, when[m]], t]],
+        _.expand(tree) = call/cc[opt.unroll[i, ps.length][let*[p = ps[ps.length - (i + 1)], m = tree.match(p[0])][cc(p[1].apply(tree, m)) || tree, when[m]], tree]],
 
         this.rmacro(qs[html[_]], _.expand),
 
