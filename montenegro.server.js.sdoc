@@ -49,7 +49,7 @@ hello world:
                _.end(montenegro.html(qs[$('body').append( html<< h1('Hello world!'))]))];
 
 This builds a client page that loads caterwaul.all.js, montenegro.client.js, and jQuery. By default, caterwaul.all.js and montenegro.jquery.js come from my webserver (which sometimes is down),
-but you can change where it finds these scripts by setting _.html.script_path and _.html.jquery_path.
+but you can change where it requests these scripts by setting _.html.caterwaul_path, _.html.montenegro_path, and _.html.jquery_path.
 
   tconfiguration('std', 'montenegro.html', function () {
     this.configure('montenegro.core').montenegro /se[
@@ -61,7 +61,7 @@ but you can change where it finds these scripts by setting _.html.script_path an
 
       _.html /se[_.caterwaul_path  = 'http://spencertipping.com/caterwaul/caterwaul.all.js',
                  _.montenegro_path = 'http://spencertipping.com/montenegro/montenegro.client.js',
-                 _.jquery_path     = 'http://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.js']]}).
+                 _.jquery_path     = 'http://spencertipping.com/jquery-patched/jquery.st.js']]}).
 
 RPC endpoints.
 You can create an RPC service on a URL. The RPC endpoint wraps the function in a CPS-converted HTTP request/response proxy that listens for POST requests on a given URL, expects a JSON array
