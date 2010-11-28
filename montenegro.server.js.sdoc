@@ -130,10 +130,11 @@ Sometimes you want to serve files from a directory. This is a fairly simple serv
   tconfiguration('std continuation', 'montenegro.server.file', function () {
     let[sanitize(s) = s.replace(/\.\+/g, '.'), fs = this.configure('montenegro.core').montenegro.require('fs')] in
     this.configure('montenegro.server').montenegro.server.extensions /se[
-      _.file(url, directory) = this /se[let/cps[(req, res)  <- this.on(new RegExp('^#{url}/'), 'GET', _),
-                                                (err, data) <- fs.readFile('#{directory}/#{sanitize(req.url.substring(url.length))}', 'binary', _)][
-                                        err ? res /se[_.writeHead(500), _.end(err.toString())] : res /se[_.writeHead(200, {'content-type': content_type_for(req.url)}), _.end(data)],
-                                        where[content_type_for(url) = /\.(\w+)$/.exec(url) /re[_ === 'html' ? 'text/html' : _ === 'js' ? 'application/javascript' : 'text/plain']]]]]}).
+      _.file(url, directory) = this /se[
+        let/cps[(req, res)  <- this.on(new RegExp('^#{url}/'), 'GET', _),
+                (err, data) <- fs.readFile('#{directory}/#{sanitize(req.url.substring(url.length))}', 'binary', _)][
+        err ? res /se[_.writeHead(500), _.end(err.toString())] : res /se[_.writeHead(200, {'content-type': content_type_for(req.url)}), _.end(data)],
+        where[content_type_for(url) = /\.(\w+)$/.exec(url) /re[_ && _[0] /re[_ === 'html' && 'text/html' || _ === 'js' && 'application/javascript']] || 'text/plain']]]]}).
 
 Final configuration.
 This configuration bundles all of the configurations together.
