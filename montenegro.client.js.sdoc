@@ -137,8 +137,7 @@ name.) So, for example, suppose we're modeling a person with a name and e-mail a
              append_single(node, c)  = node.append(c.constructor === String ? document.createTextNode(c) : c),
              append_multiple(node)   = let[as = seq[~arguments].slice(1)] in node /se[seq[~as *![_ !== null && _ !== undefined && append_single(node, _)]]]] in
 
-        _.define_pattern /se[_(qs[_], fn[x][is_an_element(x) ? qs[_$(_document.createElement(_tag))].replace({_$: ref($), _document: ref(document), _tag: ref(x.data)}) :
-                                               x.is_string() ? ref(x.as_escaped_string()) : x]),
+        _.define_pattern /se[_(qs[_], fn[x][qs[_$(_document.createElement(_tag))].replace({_$: ref($), _document: ref(document), _tag: ref(x.data)}), when[is_an_element(x)]]),
 
                              _(qs[_(_)], append)(qs[_ > _], append)(qs[_ >= _], append_eval),
                              where[append(t1, t2)      = qs[_f(_e, _c)].replace({_f: ref(append_multiple), _e: expand(t1), _c: expand(t2)}),
