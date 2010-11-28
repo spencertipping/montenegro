@@ -125,28 +125,28 @@
       this.configure('montenegro.core montenegro.methods').montenegro /se[
       let[$ = _.$, document = _.document, ps = seq[~[]]][_.dom = {} /se[
         _.define_pattern(pattern, expansion) = _.define_pattern /se[ps.push([pattern, expansion])],
-        _.expand(tree) = call/cc[opt.unroll[i, ps.length][let*[p = ps[ps.length - (i + 1)], m = tree.match(p[0])][cc(p[1].apply(tree, m)) || tree, when[m]], tree]],
 
-        this.rmacro(qs[html[_]], _.expand),
+        this.rmacro(qs[html[_]], fn[x][_.expand(x)]),
 
         _.elements = caterwaul.util.qw('html head body meta script style link title div a span input button textarea option select form label iframe blockquote code caption ' +
                                        'table tbody tr td th thead tfoot img h1 h2 h3 h4 h5 h6 li ol ul noscript p pre samp sub sup var') /re[seq[!(~_ *[[_, true]])]],
 
-        let*[ref(x)                 = new caterwaul.ref(x),
-             is_an_element(tree)    = _.elements[tree.data] || tree[0] && is_an_element(tree[0]),
-             append_single(node, c) = node.append(c.constructor === String ? document.createTextNode(c) : c),
-             append_multiple(node)  = let[as = seq[~arguments].slice(1)] in node /se[seq[~as *![_ !== null && _ !== undefined && append_single(node, _)]]]] in
+        let*[ref(x)                  = new caterwaul.ref(x),
+             expand = _.expand(tree) = call/cc[opt.unroll[i, ps.length][let*[p = ps[ps.length - (i + 1)], m = tree.match(p[0])][cc(p[1].apply(tree, m)) || tree, when[m]], tree]],
+             is_an_element(tree)     = _.elements[tree.data] || tree[0] && is_an_element(tree[0]),
+             append_single(node, c)  = node.append(c.constructor === String ? document.createTextNode(c) : c),
+             append_multiple(node)   = let[as = seq[~arguments].slice(1)] in node /se[seq[~as *![_ !== null && _ !== undefined && append_single(node, _)]]]] in
 
         _.define_pattern /se[_(qs[_], fn[x][is_an_element(x) ? qs[_$(_document.createElement(_tag))].replace({_$: ref($), _document: ref(document), _tag: ref(x.data)}) :
                                                x.is_string() ? ref(x.as_escaped_string()) : x]),
 
                              _(qs[_(_)], append)(qs[_ > _], append)(qs[_ >= _], append_eval),
-                             where[append(t1, t2)      = qs[_f(_e, _c)].replace({f: ref(append_multiple), _e: _.expand(t1), _c: _.expand(t2)}),
-                                   append_eval(t1, t2) = qs[_f(_e, _c)].replace({f: ref(append_multiple), _e: _.expand(t1), _c: t2})],
+                             where[append(t1, t2)      = qs[_f(_e, _c)].replace({f: ref(append_multiple), _e: expand(t1), _c: expand(t2)}),
+                                   append_eval(t1, t2) = qs[_f(_e, _c)].replace({f: ref(append_multiple), _e: expand(t1), _c: t2})],
 
-                             _(qs[_._],  fn[t1, t2][qs[_e.addClass(_c)].replace({_e: _.expand(t1), _c: ref(t2.data)}), when[is_an_element(t1)]]),
-                             _(qs[_/_],  fn[t1, t2][qs[_e._f].replace({_e: _.expand(t1), _f: t2})]),
-                             _(qs[_, _], fn[t1, t2][qs[_1, _2].replace({_1: _.expand(t1), _2: _.expand(t2)})])]]]]}).
+                             _(qs[_._],  fn[t1, t2][qs[_e.addClass(_c)].replace({_e: expand(t1), _c: ref(t2.data)}), when[is_an_element(t1)]]),
+                             _(qs[_/_],  fn[t1, t2][qs[_e._f].replace({_e: expand(t1), _f: t2})]),
+                             _(qs[_, _], fn[t1, t2][qs[_1, _2].replace({_1: expand(t1), _2: expand(t2)})])]]]]}).
 
 // Final configuration.
 // This one loads all of the others.
