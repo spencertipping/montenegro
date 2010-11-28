@@ -71,10 +71,9 @@
 // All listeners are CPS-converted, so you can have coroutine-based communication between the client and server. For example, this is a broadcast chat server (which relies on singly re-entrant
 // continuations for replies, if you want to think about it as a regular procedure call):
 
-// | var chat_service = montenegro.server(8080);
-//   var clients = seq[~[]];
-//   chat_service.rpc('/chat',      fn_[clients.push(this)]);
-//   chat_service.rpc('/chat/send', fn[message][seq[clients *![_(message)], clients = ~[]], this('OK')]);
+// | var clients = seq[~[]];
+//   caterwaul.montenegro.server(8080) /se[_.rpc('/chat',      fn_[clients.push(this)]).
+//                                           rpc('/chat/send', fn[message][seq[clients *![_(message)]], clients = seq[~[]], this('OK')])];
 
 // The client code for this example is in montenegro.client.js.sdoc.
 
