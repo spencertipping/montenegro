@@ -140,8 +140,8 @@ name.) So, for example, suppose we're modeling a person with a name and e-mail a
               node_create(tag)       = qs[_$(_document.createElement(_as[_tag] || _tag))].replace({_$: ref($), _as: ref(as), _tag: ref(tag), _document: ref(document)}),
               node_attributes(e, as) = qs[_e.se(fn_[_as])].replace({_e: e, _as: as.flatten(',').map(fn[a][qs[this.attr(_name, _value)].replace({_name: ref(a[0].data), _value: a[1]})])}),
 
-              append_single(node, c) = c.force ? node.append(x) <se< c : node.append(c.constructor === String ? document.createTextNode(c) : c),
-              append_multiple(node)  = (x !== null && x !== undefined && append_single(node, x)) <se< sa<< Array.prototype.slice.call(arguments, 1) && node,
+              append_single(node, c) = c.slice ? seq[~c *![append_single(node, _)]] : node.append(c.constructor === String ? document.createTextNode(c) : c),
+              append_multiple(node)  = let[as = Array.prototype.slice.call(arguments, 1)] in node /se[seq[~as *![_ !== null && _ !== undefined && append_single(node, _)]]],
 
               html_expand(tree)      = tree && let[m = tree.match(qs[_/_])][m ? qs[_e._f].replace({_e: html_expand(m[0]), _f: m[1]}) :
                                                   (m = tree.match(qs[_._]))   ? qs[_e.addClass(_c)].replace({_e: html_expand(m[0]), _c: ref(m[1].data)}) :
