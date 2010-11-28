@@ -121,7 +121,7 @@ name.) So, for example, suppose we're modeling a person with a name and e-mail a
 
   The complete list is in caterwaul.montenegro.dom.elements; setting additional keys in this hash to truthy values causes those identifiers to be treated as valid HTML elements.
 
-    tconfiguration('std seq', 'montenegro.dom', function () {
+    tconfiguration('std seq continuation', 'montenegro.dom', function () {
       this.configure('montenegro.core montenegro.methods').montenegro /se[
       let[$ = _.$, document = _.document, ps = seq[~[]]][_.dom = {} /se[
         _.define_pattern(pattern, expansion) = _.define_pattern /se[ps.push([pattern, expansion])],
