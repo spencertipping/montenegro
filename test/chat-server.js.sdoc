@@ -1,7 +1,12 @@
 A trivial chat server.
 
 caterwaul.clone('std seq montenegro')(function () {
-  let[clients = seq[~[]]] in
   caterwaul.montenegro.server(8080) /se[
+    // Server code:
+    let[clients = seq[~[]]] in
     _.rpc('/chat', fn_[clients.push(this)]).rpc('/chat/send', fn[message][clients.each(fn[c][c(message)]), clients = seq[~[]], this('OK')]),
-    _.html('/chat/app', fn_[$('body').append('Chat application')])]})();
+
+    // Client code:
+    _.html('/chat/app', qs[caterwaul.montenegro.rpc('/chat')(fn[message][$('.log').append( html<< div.message(!(message /se[console.log(_)]))), this()]),
+                           let*[send = caterwaul.montenegro.rpc('/chat/send')] in
+                           $('body').append( html<< div.log(button('Send') /click(fn_[send($('input').val())]), input))])]})();

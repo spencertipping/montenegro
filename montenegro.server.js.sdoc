@@ -42,26 +42,26 @@ request handlers. (A request handler is just a function that Node's createServer
       _.server.extensions = {}]}).
 
 Trivial HTML construction.
-This gives you a quick way to throw a page together. The key here is that you write a function that will end up being executed on the client-side when jQuery loads. For example, to say hello
-world:
+This gives you a quick way to throw a page together. The key here is that you quote a syntax tree that will end up being executed on the client-side when jQuery loads. For example, to say
+hello world:
 
 | response /se[_.writeHead(200, {'content-type': 'text/html'}),
-               _.end(montenegro.html(fn_[$('body').append( html<< h1('Hello world!'))]))];
+               _.end(montenegro.html(qs[$('body').append( html<< h1('Hello world!'))]))];
 
 This builds a client page that loads caterwaul.all.js, montenegro.client.js, and jQuery. By default, caterwaul.all.js and montenegro.jquery.js come from my webserver (which sometimes is down),
 but you can change where it finds these scripts by setting _.html.script_path and _.html.jquery_path.
 
   tconfiguration('std', 'montenegro.html', function () {
     this.configure('montenegro.core').montenegro /se[
-      _.html(f) = let*[html_header()       = let[s(src) = '<script src="#{src}"></script>'] in
+      _.html(t) = let*[html_header()       = let[s(src) = '<script src="#{src}"></script>'] in
                                              '<!doctype html><html><head>#{s(_.html.jquery_path)}#{s(_.html.caterwaul_path)}#{s(_.html.montenegro_path)}',
                        wrap_initializer(s) = '<script>$(caterwaul.clone("std opt continuation seq montenegro")(#{s}))</script>',
                        html_footer()       = '</head><body></body></html>'] in
-                  html_header() + wrap_initializer(f.toString()) + html_footer(),
+                  html_header() + wrap_initializer(qs[function () {return _t}].replace({_t: t}).serialize()) + html_footer(),
 
       _.html /se[_.caterwaul_path  = 'http://spencertipping.com/caterwaul/caterwaul.all.js',
                  _.montenegro_path = 'http://spencertipping.com/montenegro/montenegro.client.js',
-                 _.jquery_path     = 'http://ajax.googleapis.com/ajax/libs/jquery/1.4.4']]}).
+                 _.jquery_path     = 'http://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.js']]}).
 
 RPC endpoints.
 You can create an RPC service on a URL. The RPC endpoint wraps the function in a CPS-converted HTTP request/response proxy that listens for POST requests on a given URL, expects a JSON array
@@ -112,17 +112,17 @@ documentation for it' message as plain text. The service will also send potentia
   requests to the RPC to verify that it's working correctly. This is enabled in production-mode as well as development mode; it's my attempt to encode Kerckhoffs' principle
   (http://en.wikipedia.org/wiki/Kerckhoffs'_principle) into the framework to prevent bad security decisions.
 
-      _.rpc.testpage() = html(fn_[$('body').append( html<< h1('Test page'))])]}).
+      _.rpc.testpage() = html(qs[$('body').append( html<< h1('Test page'))])]}).
 
 HTML server configuration.
 You can send HTML pages to the client by writing initialization functions. To send a hello world page, for example:
 
-| montenegro.server(8080).html('/hello', fn_[$('body').append( html<< h1('Hello world!'))]);
+| montenegro.server(8080).html('/hello', qs[$('body').append( html<< h1('Hello world!'))]);
 
   tconfiguration('std', 'montenegro.server.html', function () {
     let[html = this.configure('montenegro.html').montenegro.html] in
     this.configure('montenegro.server').montenegro.server.extensions /se[
-      _.html(url, f) = let[s = html(f)] in this /se[_.on(url, 'GET', fn[req, res][res /se[_.writeHead(200, {'content-type': 'text/html'}), _.end(s)]])]]}).
+      _.html(url, t) = let[s = html(t)] in this /se[_.on(url, 'GET', fn[req, res][res /se[_.writeHead(200, {'content-type': 'text/html'}), _.end(s)]])]]}).
 
 Final configuration.
 This configuration bundles all of the configurations together.
