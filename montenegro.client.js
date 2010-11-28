@@ -141,8 +141,8 @@
                                                x.is_string() ? ref(x.as_escaped_string()) : x]),
 
                              _(qs[_(_)], append)(qs[_ > _], append)(qs[_ >= _], append_eval),
-                             where[append(t1, t2)      = qs[_f(_e, _c)].replace({f: ref(append_multiple), _e: expand(t1), _c: expand(t2)}),
-                                   append_eval(t1, t2) = qs[_f(_e, _c)].replace({f: ref(append_multiple), _e: expand(t1), _c: t2})],
+                             where[append(t1, t2)      = qs[_f(_e, _c)].replace({_f: ref(append_multiple), _e: expand(t1), _c: expand(t2)}),
+                                   append_eval(t1, t2) = qs[_f(_e, _c)].replace({_f: ref(append_multiple), _e: expand(t1), _c: t2})],
 
                              _(qs[_._],  fn[t1, t2][qs[_e.addClass(_c)].replace({_e: expand(t1), _c: ref(t2.data)}), when[is_an_element(t1)]]),
                              _(qs[_/_],  fn[t1, t2][qs[_e._f].replace({_e: expand(t1), _f: t2})]),
