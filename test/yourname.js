@@ -2,7 +2,7 @@
 
 caterwaul.clone('std montenegro')(function () {
   caterwaul.montenegro.server(8080) /se[_.rpc('/greet', 'Call this with your name to get a greeting.', fn[name][this('Hello, #{name}')]).
-                                          html('/', qs[$('body').append( html<< div(h1('The Name App'), input, button('Get a greeting'))),
+                                          html('/', qs[$('body').append(html[div(h1('The Name App'), input, button('Get a greeting'))]),
                                                        $('button').click(fn_[greet_service($('input').val(), fn[greeting][alert(greeting)])]),
                                                        where[greet_service = caterwaul.montenegro.rpc('/greet')]])];
 })();
