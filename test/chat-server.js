@@ -6,7 +6,7 @@ caterwaul.clone('std seq montenegro')(function () {
     _.rpc('/chat/listen', fn_[clients.push(this)]).rpc('/chat/send', fn[message][seq[clients *![_(message)]], clients = seq[~[]], this('OK')]), where[clients = seq[~[]]],
 
     // Client code:
-    _.html('/chat/app', qs[caterwaul.montenegro.rpc('/chat/listen')(fn[message][$('.log').append( html<< div.message(!(message /se[console.log(_)]))), this()]),
+    _.html('/chat/app', qs[caterwaul.montenegro.rpc('/chat/listen')(fn[message][$('.log').append( html[div.message(message)]), this()]),
                            let*[send = caterwaul.montenegro.rpc('/chat/send')] in
                            $('body').append(html[div.log(input /enter(fn_[send($(this).val()), $(this).val('')]))])])]})();
 
