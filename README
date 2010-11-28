@@ -1,20 +1,23 @@
 Montenegro web framework.
-Montenegro consists of two files, montenegro.jquery.js and montenegro.js. The former is used on the client-side (as a Caterwaul configuration), and the latter is used on the server-side.
+Montenegro consists of two files, montenegro.client.js and montenegro.server.js.
 
-Client-side library.
-montenegro.jquery gives you some interesting stuff, perhaps most importantly a syntax for creating markup inside Javascript:
+Server-side library.
+The server is basically a wrapper around the node.js HTTP listener that gives you higher-level ways to define functions. For instance, you can create an RPC endpoint this way:
 
-  // Using the montenegro.jquery Caterwaul configuration:
-  var element = html<< div.foo.bar('some text', a[href='http://...']('link to wherever'));
-  $('body').append(element);
+  // Creating a server automatically starts it
+  var server = caterwaul.montenegro.server(8080);
+  server.rpc('/hi', function (name) {this('Hi there, ' + name)});
 
-In this example, the following markup is appended to the body:
+The corresponding client connector looks like this:
 
-  <div class='foo bar'>
-    some text
-    <a href='http://...'>link to wherever</a>
-  </div>
+  var hi = caterwaul.montenegro.rpc('/hi');
+  hi('Bob', function (greeting) {alert(greeting)});
 
-The key is the html<< operator, which returns a jQuery-wrapped DOM node. The source code explains all of the syntax used to construct DOM elements.
+You can also:
 
-(More documentation forthcoming as further features are designed)
+  1. Serve a directory as static files: server.file('/url', 'directory')
+  2. Serve a page with some client code: server.html('/testpage', qs[$('body').append( html<< h1('Hello world'))]);
+  3. Handle a request with a regular function: server.on('/custom', 'GET', function (request, response) {...});
+
+See the applications in test/ for some examples of how to use it. (Also check out the sdoc.html page -- available online at http://spencertipping.com/montenegro/sdoc.html -- which goes over
+many details and edge cases.)
