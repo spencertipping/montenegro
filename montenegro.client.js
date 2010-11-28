@@ -51,9 +51,9 @@
 
     tconfiguration('std seq', 'montenegro.rpc', function () {
       this.configure('montenegro.core').montenegro /se[
-        _.rpc(url)() = let*[as = seq[~arguments], callback = as.length && as[as.length - 1] /re[_.constructor === Function && as.pop()]] in
-                       $.ajax({url: url, type: 'POST', contentType: 'application/json', data: JSON.stringify(as.slice()),
-                           success: fn[reply][callback && callback.apply(fn_[_.rpc(url).apply(null, arguments)], reply)]})]}).
+        _.rpc(url)() = let[as = seq[~arguments]][let*[callback = as.length && as[as.length - 1] /re[_.constructor === Function && as.pop()]] in
+                                                 $.ajax({url: url, type: 'POST', contentType: 'application/json', data: JSON.stringify(as.slice()),
+                                                     success: fn[reply][callback && callback.apply(fn_[_.rpc(url).apply(null, arguments)], reply)]})]}).
 
 // DOM construction.
 // You can build elements using a CSS-selector-style syntax. (Alternatively, you can provide an element in the markup; if you do it this way, the template element's ID should match the model
