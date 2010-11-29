@@ -139,7 +139,7 @@
 
         _.define_pattern /se[_(qs[_], fn[x][qs[_$(_document.createElement(_tag))].replace({_$: ref($), _document: ref(document), _tag: ref(x.data)}), when[is_an_element(x)]]),
 
-                             _(qs[_(_)], append)(qs[_[_]], append)(qs[_ > _], append)(qs[_ >= _], append_eval),
+                             _(qs[_(_)], append)(qs[_ > _], append)(qs[_ >= _], append_eval),
                              where[append(t1, t2)      = qs[_f(_e, _c)].replace({_f: ref(append_multiple), _e: expand(t1), _c: expand(t2)}),
                                    append_eval(t1, t2) = qs[_f(_e, _c)].replace({_f: ref(append_multiple), _e: expand(t1), _c: t2})],
 
