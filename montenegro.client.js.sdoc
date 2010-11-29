@@ -20,9 +20,11 @@ These are used throughout Montenegro.
   tconfiguration('std', 'montenegro.methods', function () {$.fn.se(f) = this /se[f.call(_, _)]}).
 
   Event extensions.
-  Some events are common enough that it's useful to have a handler for them. Hitting the enter key is one of those:
+  Some events are common enough that it's useful to have a handler for them. Hitting the enter key is one of those. Another is getting a link to have a click action and look active, but not
+  actually go anywhere.
 
-    tconfiguration('std', 'montenegro.events', function () {$.fn.enter(f) = this.keyup(fn[e][e.which === 13 && f.call(this, e)])}).
+    tconfiguration('std', 'montenegro.events', function () {$.fn /se[_.enter(f)     = this.keyup(fn[e][e.which === 13 && f.call(this, e)]),
+                                                                     _.clickable(f) = this.attr('href', 'javascript:void(0)').click(f)]}).
 
 RPC tunneling.
 You can connect to a server endpoint with a CPS-converted proxy function. You can also send opaque references to the server (presumably so that it can send them back). Here's an example of
