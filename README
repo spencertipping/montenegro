@@ -1,6 +1,74 @@
 Montenegro web framework.
 Montenegro consists of two files, montenegro.client.js and montenegro.server.js.
 
+Client-side library.
+There are two cool things that the client-side library gives you. One is an RPC connector (see below), and the other is a HAML-like language for creating HTML structure. Both features require
+jQuery, and the latter assumes that you're using the append-multiple patch (or equivalent) -- this changes the append() method to support multiple arguments and array parameters.
+
+Markup language.
+To get access to the markup language you can configure a Caterwaul function with 'montenegro', like this:
+
+  caterwaul.clone('std montenegro')(function () {
+    // ...
+  });
+
+You'll probably put it into the $() function to build the page. HTML sections are created by using the html[] macro:
+
+  $(caterwaul.clone('std montenegro')(function () {
+    var text = 'Some text';
+    $('body').append(html[div.foo.bar(h1('Some text is: '), text, button.save('Upvote this text'))]);
+  }));
+
+If you run this, the body will have this markup:
+
+  <body>
+    <div class='foo bar'>
+      <h1>Some text is:</h1>
+      Some text
+      <button class='save'>Upvote this text</button>
+    </div>
+  </body>
+
+The HTML macro is reasonably sensible about what it interprets as HTML vs. Javascript. For example, you can do this:
+
+  html[div(people.map(person_constructor))]
+
+and the macro will know that 'div' is referring to an element, whereas 'people.map(...)' is a Javascript function. It does this detection by keeping a list of possible HTML elements and
+drilling down the syntax tree to where the element would be. If it finds something that is in fact an HTML element (such as a div or input or something), then it assumes that you meant HTML;
+otherwise it assumes you wanted a JS expression.
+
+You can also force the context. The easiest way to do that is with the > and >= containment operators (which are also useful if you want a low-precedence way to indicate containment):
+
+  var div = {bar: 'text', baz: 'text'};
+  html[div.foo > (div.bar, div.baz)]            // creates three divs
+  html[div.foo >= [div.bar, div.baz]]           // creates one div with some text (but seriously, who calls a variable 'div' anyway? :) )
+
+Because these operators associate left, you can say this:
+
+  html[div.parent > div.child('first') > div.child('second') > div.child('third')]
+
+and you'll get a flat structure of three divs inside the parent. To indicate child containment you'd use parentheses to alter the association:
+
+  html[div.parent > (div.child('first') > (div.child('second') > div.child('third')))]
+
+Filtering.
+When you're writing markup in JS you'll probably use regular functions to handle a lot of the logic. The % operator is built for this:
+
+  var clickable = fn[e][e.click(fn_[alert('I got clicked')])];
+  html[div.foo %clickable]              // The same as clickable(html[div.foo])
+
+You can also curry for parameterization:
+
+  let[clickable(message)(e) = e.click(fn_[alert(message || 'generic click message')])] in
+  html[div.foo %clickable('A DIV got clicked')];
+
+Accessing jQuery methods.
+This is really easy. Here's a hello-world app:
+
+  $('body').append(html[button('Say hi') /click(fn_[alert('Hello world')])]);
+
+The slash puts you into jQuery context, as if you had said this: $('<button>Say hi</button>').click(...). You can chain methods too, since '.' binds before '/'.
+
 Server-side library.
 The server is basically a wrapper around the node.js HTTP listener that gives you higher-level ways to define functions. For instance, you can create an RPC endpoint this way:
 
@@ -20,4 +88,4 @@ You can also:
   3. Handle a request with a regular function: server.on('/custom', 'GET', function (request, response) {...});
 
 See the applications in test/ for some examples of how to use it. (Also check out the sdoc.html page -- available online at http://spencertipping.com/montenegro/sdoc.html -- which goes over
-many details and edge cases.)
+many details and edge cases.) You can run the tests by using "./build test chat-server", for instance. The build script assumes that node is in your $PATH.
