@@ -132,7 +132,7 @@
                                        'table tbody tr td th thead tfoot img h1 h2 h3 h4 h5 h6 li ol ul noscript p pre samp sub sup var') /re[seq[!(~_ *[[_, true]])]],
 
         let*[ref(x)                  = new caterwaul.ref(x),
-             expand = _.expand(tree) = call/cc[fn[cc][opt.unroll[i, ps.length][let*[p = ps[ps.length - (i + 1)], m = tree.match(p[0])][cc(p[1].apply(tree, m) || tree), when[m]], tree]]],
+             expand = _.expand(tree) = call/cc[fn[cc][opt.unroll[i, ps.length][let*[p = ps[ps.length - (i + 1)], m = tree && tree.match(p[0])][cc(p[1].apply(tree, m) || tree), when[m]], tree]]],
              is_an_element(tree)     = _.elements[tree.data] || tree[0] && is_an_element(tree[0]),
              append_single(node, c)  = node.append(c.constructor === String ? document.createTextNode(c) : c),
              append_multiple(node)   = let[as = seq[~arguments].slice(1)] in node /se[seq[~as *![_ !== null && _ !== undefined && append_single(node, _)]]]] in
