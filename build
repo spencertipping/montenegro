@@ -502,17 +502,17 @@ EOF
 lib();
 __47e283d427716d54172f29108c6cabfb
 
-meta::function('lib', <<'__e99e47d9a652b2b7f20a290a8133bc6f');
+meta::function('lib', <<'__41c8cd76d294f307d0abd8c9efeb8f0a');
 # Regenerates lib/ directory
 hook('bin/before-lib');
 hook('bin/before-lib-clean');
 unlink $_ for <lib/*>;
 hook('bin/after-lib-clean');
 hook('bin/before-lib-download');
-qx|cd lib && wget $_| for split /\n+/, libraries();
+qx|cd lib && wget -nv $_| for split /\n+/, libraries();
 hook('bin/after-lib-download');
 hook('bin/after-lib');
-__e99e47d9a652b2b7f20a290a8133bc6f
+__41c8cd76d294f307d0abd8c9efeb8f0a
 
 meta::function('load-state', <<'__878f141333993ead4d272027ad301eee');
 my ($state_name) = @_;
