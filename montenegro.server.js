@@ -161,8 +161,10 @@
 
 // | some_server.alias('/', '/index.html');        // A common redirect if you're using a file server (see above)
 
+// You can specify the request method as an optional third parameter, e.g. 'POST'. By default it's GET.
+
   tconfiguration('std', 'montenegro.server.alias', function () {
-    this.configure('montenegro.server').montenegro.server.extensions.alias(from, to) = this /se[_.on(from, fn[req, res][_(req /se[_.url = to], res)])]}).
+    this.configure('montenegro.server').montenegro.server.extensions.alias(from, to, method) = this /se[_.on(from, method || 'GET', fn[req, res][_(req /se[_.url = to], res)])]}).
 
 // Final configuration.
 // This configuration bundles all of the configurations together.
