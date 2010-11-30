@@ -154,7 +154,8 @@
         let/cps[(req, res)  <- this.on(new RegExp('^#{url}/'), 'GET', _),
                 (err, data) <- fs.readFile('#{directory}/#{sanitize(req.url.substring(url.length))}', 'binary', _)][
         err ? res /se[_.writeHead(500), _.end(err.toString())] : res /se[_.writeHead(200, {'content-type': content_type_for(req.url)}), _.end(data)],
-        where[content_type_for(url) = /\.(\w+)$/.exec(url) /re[_ && _[1] /re[_ === 'html' && 'text/html' || _ === 'js' && 'application/javascript'] || 'text/plain']]]]]}).
+        where[content_type_for(url) = /\.(\w+)$/.exec(url) /re[_ && _[1] /re[_ === 'css' && 'text/css' || _ === 'html' && 'text/html' ||
+                                                                             _ ===  'js' && 'application/javascript'] || 'text/plain']]]]]}).
 
 // Alias configuration.
 // Gives you the ability to alias content on the server-side without using redirects. For example:

@@ -149,7 +149,7 @@
         this.rmacro(qs[html[_]], fn[x][_.expand(x)]),
 
         _.elements = caterwaul.util.qw('html head body meta script style link title div a span input button textarea option select form label iframe blockquote code caption ' +
-                                       'table tbody tr td th thead tfoot img h1 h2 h3 h4 h5 h6 li ol ul noscript p pre samp sub sup var') /re[seq[!(~_ *[[_, true]])]],
+                                       'table tbody tr td th thead tfoot img h1 h2 h3 h4 h5 h6 li ol ul noscript p pre samp sub sup var canvas audio video') /re[seq[!(~_ *[[_, true]])]],
 
         let*[ref(x)                 = new caterwaul.ref(x),
              expand = _.expand(t)   = call/cc[fn[cc][opt.unroll[i, ps.length][let*[p = ps[ps.length - (i + 1)], m = t && t.match(p[0])][cc(p[1].apply(t, m) || t), when[m]], t]]],
