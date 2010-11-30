@@ -71,26 +71,30 @@
 //     <a class='facebook' href='http://facebook.com/someone'>A Facebook Page</a>
 //   </div>
 
-// | html[ div.person(input.name.nonempty, input.email, a.facebook/attr('href', 'http://facebook.com/someone') > 'A Facebook Page') ]
+// | html[div.person(input.name.nonempty, input.email, a.facebook /attr('href', 'http://facebook.com/someone') > 'A Facebook Page')]
+
+// Note that you can't use hyphens in the class names in Javascript, but if you type underscores they'll be converted into dashes. For example:
+
+// | html[div.first_name]          // becomes <div class='first-name'></div>
 
 //   Automation and event handlers.
 //   You can get the jQuery shell for an element by using the '/' operator. The right-hand side is an invocation on the jQuery shell; for example:
 
 //   | $('<a>').addClass('foo').click(fn_[...]).mouseover(fn_[...])
 //     // can be written as:
-//     html[ a.foo/click(fn_[...]).mouseover(fn_[...]) ]
+//     html[a.foo /click(fn_[...]).mouseover(fn_[...])]
 
 //   Anything after a '/' for an element is not considered to be HTML, so you'll have to use another html[] if you want to create elements to pass into a jQuery function. For example:
 
-//   | html[a.foo/append(span('some text'))]               // won't do what you want
-//     html[a.foo/append(html[span('some text')])]         // this is the right way to do it
+//   | html[a.foo /append(span('some text'))]              // won't do what you want
+//     html[a.foo /append(html[span('some text')])]        // this is the right way to do it
 //     html[a.foo > span('some text')]                     // even better
 
 //   Evaluating subexpressions.
 //   Going back to the person example, suppose you have a list of people that you want to insert into a div. Here's what that looks like:
 
 //   | var people = seq[...];
-//     var person = fn[p][html[div.person(input.name.nonempty/val(p.name))]];
+//     var person = fn[p][html[div.person(input.name.nonempty /val(p.name))]];
 //     var ui     = html[div.people(people.map(person), button.save('Save'), button.cancel('Cancel'))];
 
 //   Here, the expression 'people.map(person)' gets evaluated as a Javascript expression rather than as markup. The expression should return a string, sequence, array, or jQuery object.
@@ -147,7 +151,7 @@
                                    append_eval(t1, t2) = is_an_element(t1) && qs[_f(_e, _c)].replace({_f: ref(append_multiple), _e: expand(t1), _c: t2})],
 
                              _(qs[_%_],  fn[t1, t2][qs[_f(_e)].replace({_e: expand(t1), _f: t2})]),
-                             _(qs[_._],  fn[t1, t2][qs[_e.addClass(_c)].replace({_e: expand(t1), _c: ref(t2.data)}), when[is_an_element(t1)]]),
+                             _(qs[_._],  fn[t1, t2][qs[_e.addClass(_c)].replace({_e: expand(t1), _c: ref(t2.data.replace(/_/g, '-'))}), when[is_an_element(t1)]]),
                              _(qs[_/_],  fn[t1, t2][qs[_e._f].replace({_e: expand(t1), _f: t2})]),
                              _(qs[_, _], fn[t1, t2][qs[_1, _2].replace({_1: expand(t1), _2: expand(t2)})])]]]]}).
 
