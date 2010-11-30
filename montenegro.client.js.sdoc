@@ -15,17 +15,29 @@ for that are somewhat nefarious.
   configuration('montenegro.core', function () {this.shallow('montenegro', {$: jQuery, document: document})}).
 
 JQuery extension methods.
-These are used throughout Montenegro.
+These are used throughout Montenegro. se() is used to create side-effects on elements, which can be useful in the middle of long chains (this works better with the precedence than /se[] does).
+up() takes either a selector or a number. If you give it a selector, it grabs the nearest matching parent; if you give it a number, it traverses up that many parents.
 
-  tconfiguration('std', 'montenegro.methods', function () {$.fn /se[_.se(f) = this /se[f.call(_, _)],
-                                                                    _.up(s) = this.parents(s).eq(0)]}).
+The nearest() method lets you do approximate matching. For example, suppose you have this setup:
+
+| div.foo(div > textarea, div > button.save)
+
+If you want the save button to see the textarea (e.g. from inside a click handler), the obvious solution is $(this).parent().find('textarea'). However, that's a lot of work and doesn't scale
+well. Better is to say $(this).nearest('textarea'). Note that it doesn't actually return just the single nearest one. It just goes up until it starts finding textareas. Also, woe be unto you
+if you ask for the nearest of something that isn't there at all...
+
+  tconfiguration('std', 'montenegro.methods', function () {this.configure('montenegro.core').montenegro.$.fn /se[
+    _.se(f)      = this /se[f.call(_, _)],
+    _.up(s)      = s instanceof Number ? s ? this.parent().up(s - 1) : this : this.parents(s).eq(0),
+    _.nearest(s) = this.find(s) /re[_.length ? _ : this.parent().nearest(s)]]}).
 
   Event extensions.
   Some events are common enough that it's useful to have a handler for them. Hitting the enter key is one of those. Another is getting a link to have a click action and look active, but not
   actually go anywhere.
 
-    tconfiguration('std', 'montenegro.events', function () {$.fn /se[_.enter(f)     = this.keyup(fn[e][e.which === 13 && f.call(this, e)]),
-                                                                     _.clickable(f) = this.attr('href', 'javascript:void(0)').click(f)]}).
+    tconfiguration('std', 'montenegro.events', function () {this.configure('montenegro.core').montenegro.$.fn /se[
+      _.enter(f)     = this.keyup(fn[e][e.which === 13 && f.call(this, e)]),
+      _.clickable(f) = this.attr('href', 'javascript:void(0)').click(f)]}).
 
 RPC tunneling.
 You can connect to a server endpoint with a CPS-converted proxy function. You can also send opaque references to the server (presumably so that it can send them back). Here's an example of
@@ -97,7 +109,8 @@ Note that you can't use hyphens in the class names in Javascript, but if you typ
     var person = fn[p][html[div.person(input.name.nonempty /val(p.name))]];
     var ui     = html[div.people(people.map(person), button.save('Save'), button.cancel('Cancel'))];
 
-  Here, the expression 'people.map(person)' gets evaluated as a Javascript expression rather than as markup. The expression should return a string, sequence, array, or jQuery object.
+  Here, the expression 'people.map(person)' gets evaluated as a Javascript expression rather than as markup. Montenegro knows to do this because 'people' isn't one of the HTML elements it
+  knows about. Javascript expressions should return strings, sequences, arrays, or jQuery objects. Strings get promoted into text nodes, so you don't have to worry about HTML escaping.
 
   Mapping.
   You can map an element through a function using the '%' shorthand. For example:
@@ -150,9 +163,9 @@ Note that you can't use hyphens in the class names in Javascript, but if you typ
                              where[append(t1, t2)      = is_an_element(t1) && qs[_f(_e, _c)].replace({_f: ref(append_multiple), _e: expand(t1), _c: expand(t2)}),
                                    append_eval(t1, t2) = is_an_element(t1) && qs[_f(_e, _c)].replace({_f: ref(append_multiple), _e: expand(t1), _c: t2})],
 
-                             _(qs[_%_],  fn[t1, t2][qs[_f(_e)].replace({_e: expand(t1), _f: t2})]),
+                             _(qs[_ %_], fn[t1, t2][qs[_f(_e)].replace({_e: expand(t1), _f: t2})]),
                              _(qs[_._],  fn[t1, t2][qs[_e.addClass(_c)].replace({_e: expand(t1), _c: ref(t2.data.replace(/_/g, '-'))}), when[is_an_element(t1)]]),
-                             _(qs[_/_],  fn[t1, t2][qs[_e._f].replace({_e: expand(t1), _f: t2})]),
+                             _(qs[_ /_], fn[t1, t2][qs[_e._f].replace({_e: expand(t1), _f: t2})]),
                              _(qs[_, _], fn[t1, t2][qs[_1, _2].replace({_1: expand(t1), _2: expand(t2)})])]]]]}).
 
 Final configuration.
