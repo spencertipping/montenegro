@@ -46,7 +46,7 @@ This gives you a quick way to throw a page together. The key here is that you qu
 hello world:
 
 | response /se[_.writeHead(200, {'content-type': 'text/html'}),
-               _.end(montenegro.html(qs[$('body').append( html<< h1('Hello world!'))]))];
+               _.end(montenegro.html(qs[$('body').append(html[h1('Hello world!')])]))];
 
 This builds a client page that loads caterwaul.all.js, montenegro.client.js, and jQuery. By default, caterwaul.all.js and montenegro.jquery.js come from my webserver (which sometimes is down),
 but you can change where it requests these scripts by setting _.html.caterwaul_path, _.html.montenegro_path, and _.html.jquery_path.
@@ -135,7 +135,9 @@ documentation for it' message as plain text. The service will also send potentia
 HTML server configuration.
 You can send HTML pages to the client by writing initialization functions. To send a hello world page, for example:
 
-| montenegro.server(8080).html('/hello', qs[$('body').append( html<< h1('Hello world!'))]);
+| montenegro.server(8080).html('/hello', qs[$('body').append(html[h1('Hello world!')])]);
+
+The client file contains full documentation for the html[] macro (the client ends up macroexpanding the code above).
 
   tconfiguration('std', 'montenegro.server.html', function () {
     let[html = this.configure('montenegro.html').montenegro.html] in
