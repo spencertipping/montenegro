@@ -17,7 +17,8 @@
 // JQuery extension methods.
 // These are used throughout Montenegro.
 
-  tconfiguration('std', 'montenegro.methods', function () {$.fn.se(f) = this /se[f.call(_, _)]}).
+  tconfiguration('std', 'montenegro.methods', function () {$.fn /se[_.se(f) = this /se[f.call(_, _)],
+                                                                    _.up(s) = this.parents(s).eq(0)]}).
 
 //   Event extensions.
 //   Some events are common enough that it's useful to have a handler for them. Hitting the enter key is one of those. Another is getting a link to have a click action and look active, but not
@@ -44,9 +45,9 @@
 //   Example: Building a chat client.
 //   In montenegro.server.js.sdoc there's an example of a broadcast chat server. Here's the corresponding client code and some DOM nodes to make it work:
 
-//   | var send = montenegro.rpc('/chat/send');
-//     montenegro.rpc('/chat')(fn[message][$('.log').append( html<< div.message(!message)), this()]);
-//     $('body').append( html<< div(div.log, button('Send'), input));         // This just builds the UI. You could also do this with regular HTML.
+//   | var send = caterwaul.montenegro.rpc('/chat/send');
+//     caterwaul.montenegro.rpc('/chat')(fn[message][$('.log').append(html[div.message(message)]), this()]);
+//     $('body').append(html[div(div.log, button('Send'), input]));         // This just builds the UI. You could also do this with regular HTML.
 //     let/cps[_ <- $('button').click(_)][send($('#input').val())];
 
 //   The 'this()' invocation inside the callback is used when you want to send something back and reuse the callback function. I'm using it here to avoid having to refer to the callback function
@@ -98,13 +99,13 @@
 //   You can map an element through a function using the '%' shorthand. For example:
 
 //   | var nonempty = fn_[this.instavalidate(/^.+$/)];
-//     var ui = html[div(input.name%nonempty, input.title%nonempty)]
+//     var ui = html[div(input.name %nonempty, input.title %nonempty)]
 
 //   This isn't quite the same thing as side-effecting. Using the map shorthand replaces the element with whatever your map function returns, which may or may not be desirable.
 
 //   Note that tempting as it is, you can't say this:
 
-//   | html[div((input.name, input.title)%nonempty)]       // can't do this, even though it would be awesome
+//   | html[div((input.name, input.title) %nonempty)]       // can't do this, even though it would be awesome
 
 //   I considered adding a distributive property, but Javascript's syntax is restrictive enough that I don't think it makes sense. It also makes you think too hard about your markup, which isn't
 //   a good thing. The markup should be simple and local, and your modifier functions should be short enough to type several times. (This can be achieved by using a let-binding or similar.)
@@ -133,11 +134,11 @@
         _.elements = caterwaul.util.qw('html head body meta script style link title div a span input button textarea option select form label iframe blockquote code caption ' +
                                        'table tbody tr td th thead tfoot img h1 h2 h3 h4 h5 h6 li ol ul noscript p pre samp sub sup var') /re[seq[!(~_ *[[_, true]])]],
 
-        let*[ref(x)                  = new caterwaul.ref(x),
-             expand = _.expand(tree) = call/cc[fn[cc][opt.unroll[i, ps.length][let*[p = ps[ps.length - (i + 1)], m = tree && tree.match(p[0])][cc(p[1].apply(tree, m) || tree), when[m]], tree]]],
-             is_an_element(tree)     = _.elements[tree.data] || tree[0] && is_an_element(tree[0]),
-             append_single(node, c)  = node.append(c.constructor === String ? document.createTextNode(c) : c),
-             append_multiple(node)   = let[as = seq[~arguments].slice(1)] in node /se[seq[~as *![_ !== null && _ !== undefined && append_single(node, _)]]]] in
+        let*[ref(x)                 = new caterwaul.ref(x),
+             expand = _.expand(t)   = call/cc[fn[cc][opt.unroll[i, ps.length][let*[p = ps[ps.length - (i + 1)], m = t && t.match(p[0])][cc(p[1].apply(t, m) || t), when[m]], t]]],
+             is_an_element(tree)    = _.elements[tree.data] || tree[0] && is_an_element(tree[0]),
+             append_single(node, c) = node.append(c.constructor === String ? document.createTextNode(c) : c),
+             append_multiple(node)  = let[as = seq[~arguments].slice(1)] in node /se[seq[~as *![_ !== null && _ !== undefined && append_single(node, _)]]]] in
 
         _.define_pattern /se[_(qs[_], fn[x][qs[_$(_document.createElement(_tag))].replace({_$: ref($), _document: ref(document), _tag: ref(x.data)}), when[is_an_element(x)]]),
 
