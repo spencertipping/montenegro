@@ -120,7 +120,7 @@
                                                            > p('You can evaluate code below. ', code('rpc()'), ' is the RPC connector function for the API, and ', code('log()'),
                                                                ' can be used to log values. Your code will be macroexpanded under std, seq, opt, montenegro, and continuation.')
                                                            > div(button.run('Run'))
-                                                           > textarea.code /val('let/cps[x <- rpc("Hello world", _)][log(JSON.stringify(x))]')
+                                                           > textarea.code /val('let/cps[x <- rpc("Hello world", _)][log(x)]')
                                                            > div.log]),
 
                                  window.rpc = caterwaul.montenegro.rpc(url),
@@ -128,7 +128,7 @@
                                  $.get(url, fn[doc][$('.documentation').empty().append(doc)]),
 
                                  where*[entry(x) = html[div.entry(code(x), ' ', a('[x]')/click(fn_[$(this).parent().remove()]))],
-                                        log      = window.log(x)   = $('div.log').append(entry(x)),
+                                        log      = window.log(x)   = $('div.log').append(entry(JSON.stringify(x))),
                                         error    = window.error(x) = $('div.log').append(entry(x.toString()).addClass('error')),
                                         url      = document.location.href.replace(/\/test$/, '')]])]}).
 
