@@ -1,0 +1,1 @@
+sdocp('test/markup.js.sdoc', 'Various markup macros\n\ncaterwaul.clone(\'std montenegro\')(function () {\n  caterwaul.montenegro.server(8080) /se[_.html(\'/buttons\', qs[$(\'body\').append(html[div > [button(\'first\'), button(\'second\')]])])]})();\n');
