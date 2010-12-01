@@ -163,6 +163,7 @@
                              where[append(t1, t2)      = is_an_element(t1) && qs[_f(_e, _c)].replace({_f: ref(append_multiple), _e: expand(t1), _c: expand(t2)}),
                                    append_eval(t1, t2) = is_an_element(t1) && qs[_f(_e, _c)].replace({_f: ref(append_multiple), _e: expand(t1), _c: t2})],
 
+                             _(qs[[_]],  fn     [t][qs[[_e]].replace({_e: expand(t)})]),
                              _(qs[_ %_], fn[t1, t2][qs[_f(_e)].replace({_e: expand(t1), _f: t2})]),
                              _(qs[_._],  fn[t1, t2][qs[_e.addClass(_c)].replace({_e: expand(t1), _c: ref(t2.data.replace(/_/g, '-'))}), when[is_an_element(t1)]]),
                              _(qs[_ /_], fn[t1, t2][qs[_e._f].replace({_e: expand(t1), _f: t2})]),
