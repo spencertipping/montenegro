@@ -532,6 +532,17 @@ reload();
 verify();
 __878f141333993ead4d272027ad301eee
 
+meta::function('loc', <<'__dfe41cc08b7be0baa9a396df86e9b8e2');
+# Counts SLOC, whitespace, and total LOC in the codebase.
+my @lines      = map split(/\n/, file::read($_)), dependencies(), main();
+my $comments   = grep /^\s*\/\//, @lines;
+my $whitespace = grep /^\s*$/, @lines;
+my $source     = @lines - $comments - $whitespace;
+
+print "(Figures below include library code)\n";
+print "$source SLOC, $whitespace whitespace lines, $comments comment lines\n";
+__dfe41cc08b7be0baa9a396df86e9b8e2
+
 meta::function('lock', 'chmod_self(sub {$_[0] & 0555});');
 meta::function('ls', <<'__ffe7609f16d647b7eb9ed9693dd12c23');
 my ($options, @criteria) = separate_options(@_);
@@ -1131,12 +1142,13 @@ meta::type::configuration
 parent::/home/spencertipping/bin/object
 __511208c99d8bc2caa3067db9f1824163
 
-meta::parent('/home/spencertipping/bin/node-project', <<'__fa14e4a63880465ce5304567225e7472');
+meta::parent('/home/spencertipping/bin/node-project', <<'__e1d03a320987450cf625ae9bd3158764');
 function::dependencies
 function::generate
 function::hook
 function::init
 function::lib
+function::loc
 function::node
 function::repl
 function::run
@@ -1144,7 +1156,7 @@ function::run-forever
 function::test
 message_color::test
 parent::/home/spencertipping/bin/configuration
-__fa14e4a63880465ce5304567225e7472
+__e1d03a320987450cf625ae9bd3158764
 
 meta::parent('/home/spencertipping/bin/object', <<'__2fa5e2565231e24d8c3ba43abc0403c4');
 bootstrap::initialization
