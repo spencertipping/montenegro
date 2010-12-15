@@ -1,1 +1,1 @@
-sdocp('test/file-server.js.sdoc', 'Trivial file server test.\n\ncaterwaul.clone(\'std montenegro\')(function () {\n  caterwaul.montenegro.server(8080) /se[_.file(\'/\', \'.\')]})();\n');
+sdocp('test/file-server.js.sdoc', 'Trivial file server test.\n\ncaterwaul.clone(\'std montenegro\')(function () {\n  caterwaul.montenegro.server(8080) /se[_.file(\'/\', \'./\')]})();\n');

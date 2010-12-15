@@ -1,0 +1,1 @@
+sdocp('test/single-file-server.js.sdoc', 'Single file server (not a directory)\n\ncaterwaul.clone(\'std montenegro\')(function () {\n  caterwaul.montenegro.server(8080).file(\'/foo\', \'test/single-file-server.js\')})();\n');

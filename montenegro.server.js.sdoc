@@ -149,23 +149,27 @@ Sometimes you want to serve files from a directory. This is a fairly simple serv
 
   tconfiguration('std continuation', 'montenegro.server.file', function () {
     let[sanitize(s) = s.replace(/\.\+/g, '.'), fs = this.configure('montenegro.core').montenegro.require('fs')] in
-    this.configure('montenegro.server').montenegro.server.extensions /se[
-      _.file(url, directory) = this /se[
-        let/cps[(req, res)  <- this.on(new RegExp('^#{url}/'), 'GET', _),
-                (err, data) <- fs.readFile('#{directory}/#{sanitize(req.url.substring(url.length))}', 'binary', _)][
-        err ? res /se[_.writeHead(500), _.end(err.toString())] : res /se[_.writeHead(200, {'content-type': content_type_for(req.url)}), _.end(data)],
-        where[content_type_for(url) = /\.(\w+)$/.exec(url) /re[_ && _[1] /re[_ === 'css' && 'text/css' || _ === 'html' && 'text/html' ||
-                                                                             _ ===  'js' && 'application/javascript'] || 'text/plain']]]]]}).
+    this.configure('montenegro.server').montenegro.server.extensions /se.e[
+      e.file_extension_mimetypes = {css: 'text/css', html: 'text/html', js: 'application/javascript', '': 'text/plain'},
+      e.file(url, filename) = this /se[let/cps[(req, res)  <- this.on(new RegExp('^#{url.replace(/\/$/, "")}(/|$)'), 'GET', _),
+                                               (err, data) <- fs.readFile('#{filename}#{sanitize(req.url.substring(url.length))}', 'binary', _)]
+                                              [err ? res /se[_.writeHead(500), _.end(err.toString())] : res /se[_.writeHead(200, {'content-type': content_type_for(req.url)}), _.end(data)],
+                                               where[content_type_for(url) = /\.(\w+)$/.exec(url) /re[_ && _[1] /re[e.file_extension_mimetypes[_] || e.file_extension_mimetypes['']]]]]]]}).
 
 Alias configuration.
-Gives you the ability to alias content on the server-side without using redirects. For example:
+Gives you the ability to alias content with or without redirects. For example:
 
-| some_server.alias('/', '/index.html');        // A common redirect if you're using a file server (see above)
+| some_server.alias('/', '/index.html');                        // A server-side redirect (no 30x return code)
+  some_server.alias('/foo', '/bar', 'POST');                    // Alias POST requests instead of GETs
+  some_server.redirect('/', '/index.html');                     // A client-side redirect (301 error code)
+  some_server.redirect('/', '/index.html', {code: 302});        // A client-side redirect with a custom code
+  some_server.redirect('/foo', '/bar', {method: 'POST'});       // Issue redirect for POSTs instaed of GETs
 
-You can specify the request method as an optional third parameter, e.g. 'POST'. By default it's GET.
-
-  tconfiguration('std', 'montenegro.server.alias', function () {
-    this.configure('montenegro.server').montenegro.server.extensions.alias(from, to, method) = this /se[_.on(from, method || 'GET', fn[req, res][_(req /se[_.url = to], res)])]}).
+  tconfiguration('std continuation', 'montenegro.server.alias', function () {
+    this.configure('montenegro.server').montenegro.server.extensions /se[
+      _.alias(from, to, method)     = this /se[_.on(from, method || 'GET', fn[req, res][_(req /se[_.url = to], res)])],
+      _.redirect(from, to, options) = let[options = options || {}] in let/cps[(req, res) <- this.on(from, options.method || 'GET', _)]
+                                                                             [res.writeHead(options.code || 301, {location: to}), res.end()]]}).
 
 Final configuration.
 This configuration bundles all of the configurations together.
