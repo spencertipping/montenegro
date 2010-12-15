@@ -20,7 +20,8 @@
 //   router.on('/foo', 'GET', fn[request, response][response /se[_.writeHead(200), _.end('bar')]]);
 //   router.not_found(request, response) = response /se[_.writeHead(404), _.end('Bummer dude, not found')];
 
-// Because routers provide the same interface they accept, you can nest them and create proxies.
+// Because routers provide the same interface they accept, you can nest them and create proxies. The last matching pattern is the one that handles the URL, so you can always refine URL matches
+// (or override them) by adding new on() handlers.
 
   tconfiguration('std seq', 'montenegro.route.url', function () {
     this.configure('montenegro.core').montenegro /se[(_.route = _.route || {}) /se[
@@ -28,7 +29,7 @@
                            _.on(pattern, method, handler) = this /se[_.handlers.push({url: pattern, method: method, handler: handler})],
                            _.not_found(request, response) = response /se[_.writeHead(404), _.end('#{request.url} was not found.')],
 
-                           _.handler_for(url, method)     = seq[this.handlers %[(_.url.test ? _.url.test(url) : _.url === url) && _.method === method] *[_.handler]][0],
+                           _.handler_for(url, method)     = seq[this.handlers %[(_.url.test ? _.url.test(url) : _.url === url) && _.method === method] *[_.handler]] /re[_[_.length - 1]],
                            _.route(request, response)     = this /se[(_.handler_for(request.url, request.method) || _.not_found).call(_, request, response)]]],
                 where*[result(request, response) = result.route(request, response)]]}).
 
