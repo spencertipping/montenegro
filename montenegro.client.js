@@ -23,13 +23,16 @@
 // | div.foo(div > textarea, div > button.save)
 
 // If you want the save button to see the textarea (e.g. from inside a click handler), the obvious solution is $(this).parent().find('textarea'). However, that's a lot of work and doesn't scale
-// well. Better is to say $(this).nearest('textarea'). Note that it doesn't actually return just the single nearest one. It just goes up until it starts finding textareas. Also, woe be unto you
-// if you ask for the nearest of something that isn't there at all...
+// well. Better is to say $(this).nearest('textarea'). Note that it doesn't actually return just the single nearest one. It just goes up until it starts finding textareas. Note that .nearest() is
+// O(n^2) and average-case n log n in the number of nodes in the document.
+
+// The cval() method returns and then clears the value of a component. If you give it a parameter, the value will be cleared to that value rather than set to the empty string.
 
   tconfiguration('std', 'montenegro.methods', function () {this.configure('montenegro.core').montenegro.$.fn /se[
     _.se(f)      = this /se[f.call(_, _)],
     _.up(s)      = s instanceof Number ? s ? this.parent().up(s - 1) : this : this.parents(s).eq(0),
-    _.nearest(s) = this.length && this.find(s) /re[_.length ? _ : this.parent().nearest(s)]]}).
+    _.cval(nv)   = let[v = this.val()] in this.val(nv || '') /re[v],
+    _.nearest(s) = this.length ? this.find(s) /re[_.length ? _ : this.parent().nearest(s)] : $([])]}).
 
 //   Event extensions.
 //   Some events are common enough that it's useful to have a handler for them. Hitting the enter key is one of those. Another is getting a link to have a click action and look active, but not
