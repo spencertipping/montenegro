@@ -12,6 +12,11 @@ variable within any compiled function by using a macro.
 
    configuration('montenegro.core', function () {this.shallow('montenegro', {require: require})}).
 
+Global error handling.
+This installs a more sensible handler than the default 'die-on-error' strategy that Node uses. It logs any errors to the console and otherwise continues running normally.
+
+  tconfiguration('std', 'montenegro.global-error', function () {process.on('uncaughtException', console/mb/log)}).
+
 URL router.
 Montenegro gives you a quick proxy function to route requests based on URL patterns. This makes a suitable server if you want to promote it into one (and in fact it is the function you get
 back when you create a new server). Configuration is done like this:
@@ -176,4 +181,4 @@ Final configuration.
 This configuration bundles all of the configurations together.
 
   configuration('montenegro', function () {this.configure('montenegro.html montenegro.route.url montenegro.server montenegro.server.rpc montenegro.server.html montenegro.server.file',
-                                                          'montenegro.server.alias')});
+                                                          'montenegro.server.alias montenegro.global-error')});
