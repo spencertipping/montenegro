@@ -159,7 +159,8 @@
       e.file_extension_mimetypes = {css: 'text/css', html: 'text/html', js: 'application/javascript', '': 'text/plain'},
       e.file(url, filename) = this /se[let/cps[(req, res)  <- this.on(new RegExp('^#{url.replace(/\/$/, "")}(/|$)'), 'GET', _),
                                                (err, data) <- fs.readFile('#{filename}#{sanitize(req.url.substring(url.length))}', 'binary', _)]
-                                              [err ? res /se[_.writeHead(500), _.end(err.toString())] : res /se[_.writeHead(200, {'content-type': content_type_for(req.url)}), _.end(data)],
+                                              [err ? res /se[_.writeHead(500), _.end(err.toString())] :
+                                                     res /se[_.writeHead(200, {'content-type': content_type_for(req.url)}), _.write(data, 'binary'), _.end()],
                                                where[content_type_for(url) = /\.(\w+)$/.exec(url) /re[_ && _[1] /re[e.file_extension_mimetypes[_] || e.file_extension_mimetypes['']]]]]]]}).
 
 // Alias configuration.
