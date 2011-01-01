@@ -28,11 +28,16 @@ back when you create a new server). Configuration is done like this:
 Because routers provide the same interface they accept, you can nest them and create proxies. The last matching pattern is the one that handles the URL, so you can always refine URL matches
 (or override them) by adding new on() handlers.
 
+Each service built with this interface exposes a list of methods. You can disable it by overriding the /services URL, but if exposing the request handlers is a security flaw then there is
+probably a larger problem with the design of the application.
+
   tconfiguration('std seq', 'montenegro.route.url', function () {
     this.configure('montenegro.core').montenegro /se[(_.route = _.route || {}) /se[
       _.url() = result /se[_.handlers                     = seq[~[]],
                            _.on(pattern, method, handler) = this /se[_.handlers.push({url: pattern, method: method, handler: handler})],
                            _.not_found(request, response) = response /se[_.writeHead(404), _.end('#{request.url} was not found.')],
+
+                           _.on('/services', 'GET', _.service_listing(req, res) = res /se.r[r.writeHead(200), r.end(seq[_.handlers *['#{_.url} (#{_.method})']].join('\n'))]),
 
                            _.handler_for(url, method)     = seq[this.handlers %[(_.url.test ? _.url.test(url) : _.url === url) && _.method === method] *[_.handler]] /re[_[_.length - 1]],
                            _.route(request, response)     = this /se[(_.handler_for(request.url, request.method) || _.not_found).call(_, request, response)]]],

@@ -145,7 +145,7 @@ Note that you can't use hyphens in the class names in Javascript, but if you typ
   The complete list is in caterwaul.montenegro.dom.elements; setting additional keys in this hash to truthy values causes those identifiers to be treated as valid HTML elements.
 
     tconfiguration('std seq continuation opt', 'montenegro.dom', function () {
-      this.configure('montenegro.core montenegro.methods').montenegro /se[_.dom = l[$ = _.$, document = _.document] in caterwaul.global.clone() /se[
+      this.configure('montenegro.core montenegro.methods').montenegro /se[_.dom = l[$ = _.$, document = _.document] in caterwaul.global().clone() /se[
         this.rmacro(qs[html[_]], _.macroexpand),
 
         _.elements = caterwaul.util.qw('html head body meta script style link title div a span input button textarea option select form label iframe blockquote code caption ' +
