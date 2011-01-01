@@ -31,7 +31,7 @@
   tconfiguration('std', 'montenegro.methods', function () {this.configure('montenegro.core').montenegro.$.fn /se[
     _.se(f)      = this /se[f.call(_, _)],
     _.up(s)      = s instanceof Number ? s ? this.parent().up(s - 1) : this : this.parents(s).eq(0),
-    _.cval(nv)   = let[v = this.val()] in this.val(nv || '') /re[v],
+    _.cval(nv)   = l[v = this.val()] in this.val(nv || '') /re[v],
     _.nearest(s) = this.length ? this.find(s) /re[_.length ? _ : this.parent().nearest(s)] : $([])]}).
 
 //   Event extensions.
@@ -50,7 +50,7 @@
 //   var body     = $('body');
 //   identity(montenegro.rpc.ref(body), fn[result][montenegro.rpc.ref(result).append('Got the body element back')]);
 //   // alternatively:
-//   let/cps[result <- identity(montenegro.rpc.ref(dom_node), _)][montenegro.rpc.ref(result).append('Got the body element back')];
+//   l/cps[result <- identity(montenegro.rpc.ref(dom_node), _)][montenegro.rpc.ref(result).append('Got the body element back')];
 
 // Assuming that the server replies with the data it was given, this will append some text to the document body when the server replies. The mechanism for this is actually really simple;
 // montenegro.rpc.ref() just assigns a new gensym to each value you alias; that string goes to the server and is later resolved back into the client-side value. (This is why the server won't be
@@ -63,14 +63,14 @@
 //   | var send = caterwaul.montenegro.rpc('/chat/send');
 //     caterwaul.montenegro.rpc('/chat')(fn[message][$('.log').append(html[div.message(message)]), this()]);
 //     $('body').append(html[div(div.log, button('Send'), input]));         // This just builds the UI. You could also do this with regular HTML.
-//     let/cps[_ <- $('button').click(_)][send($('#input').val())];
+//     l/cps[_ <- $('button').click(_)][send($('#input').val())];
 
 //   The 'this()' invocation inside the callback is used when you want to send something back and reuse the callback function. I'm using it here to avoid having to refer to the callback function
 //   in a first-class way (which would normally be necessary to set the cycle up again).
 
     tconfiguration('std seq', 'montenegro.rpc', function () {
       this.configure('montenegro.core').montenegro /se[
-        _.rpc(url)() = let[as = seq[~arguments]][let*[callback = as.length && as[as.length - 1] /re[_.constructor === Function && as.pop()]] in
+        _.rpc(url)() = l[as = seq[~arguments]][l*[callback = as.length && as[as.length - 1] /re[_.constructor === Function && as.pop()]] in
                                                  $.ajax({url: url, type: 'POST', contentType: 'application/json', data: JSON.stringify(as.slice()),
                                                      success: fn[reply][callback && callback.apply(fn_[_.rpc(url).apply(null, seq[~arguments].slice().concat([callback]))], reply)]})]]}).
 
@@ -145,32 +145,29 @@
 //   The complete list is in caterwaul.montenegro.dom.elements; setting additional keys in this hash to truthy values causes those identifiers to be treated as valid HTML elements.
 
     tconfiguration('std seq continuation opt', 'montenegro.dom', function () {
-      this.configure('montenegro.core montenegro.methods').montenegro /se[
-      let[$ = _.$, document = _.document, ps = seq[~[]]][_.dom = {} /se[
-        _.define_pattern(pattern, expansion) = _.define_pattern /se[ps.push([pattern, expansion])],
-
-        this.rmacro(qs[html[_]], fn[x][_.expand(x)]),
+      this.configure('montenegro.core montenegro.methods').montenegro /se[_.dom = l[$ = _.$, document = _.document] in caterwaul.global.clone() /se[
+        this.rmacro(qs[html[_]], _.macroexpand),
 
         _.elements = caterwaul.util.qw('html head body meta script style link title div a span input button textarea option select form label iframe blockquote code caption ' +
                                        'table tbody tr td th thead tfoot img h1 h2 h3 h4 h5 h6 li ol ul noscript p pre samp sub sup var canvas audio video') /re[seq[!(~_ *[[_, true]])]],
 
-        let*[ref(x)                 = new caterwaul.ref(x),
-             expand = _.expand(t)   = call/cc[fn[cc][opt.unroll[i, ps.length][let*[p = ps[ps.length - (i + 1)], m = t && t.match(p[0])][cc(p[1].apply(t, m) || t), when[m]], t]]],
-             is_an_element(tree)    = _.elements[tree.data] || tree[0] && is_an_element(tree[0]),
-             append_single(node, c) = node.append(c.constructor === String ? document.createTextNode(c) : c),
-             append_multiple(node)  = let[as = seq[~arguments].slice(1)] in node /se[seq[~as *![_ !== null && _ !== undefined && append_single(node, _)]]]] in
+        l*[ref(x)                 = new caterwaul.ref(x),
+           expand                 = _.macroexpand,
+           is_an_element(tree)    = _.elements[tree.data] || tree[0] && is_an_element(tree[0]),
+           append_single(node, c) = node.append(c.constructor === String ? document.createTextNode(c) : c),
+           append_multiple(node)  = l[as = seq[~arguments].slice(1)] in node /se[seq[~as *![_ !== null && _ !== undefined && append_single(node, _)]]]] in
 
-        _.define_pattern /se[_(qs[_], fn[x][qs[_$(_document.createElement(_tag))].replace({_$: ref($), _document: ref(document), _tag: ref(x.data)}), when[is_an_element(x)]]),
+        _.macro /se[_(qs[_], fn[x][qs[_$(_document.createElement(_tag))].replace({_$: ref($), _document: ref(document), _tag: ref(x.data)}), when[is_an_element(x)]]),
 
-                             _(qs[_(_)], append)(qs[_ > _], append)(qs[_ >= _], append_eval),
-                             where[append(t1, t2)      = is_an_element(t1) && qs[_f(_e, _c)].replace({_f: ref(append_multiple), _e: expand(t1), _c: expand(t2)}),
-                                   append_eval(t1, t2) = is_an_element(t1) && qs[_f(_e, _c)].replace({_f: ref(append_multiple), _e: expand(t1), _c: t2})],
+                    _(qs[_(_)], append), _.(qs[_ > _], append), _.(qs[_ >= _], append_eval),
+                    where[append(t1, t2)      = is_an_element(t1) && qs[_f(_e, _c)].replace({_f: ref(append_multiple), _e: expand(t1), _c: expand(t2)}),
+                          append_eval(t1, t2) = is_an_element(t1) && qs[_f(_e, _c)].replace({_f: ref(append_multiple), _e: expand(t1), _c: t2})],
 
-                             _(qs[[_]],  fn     [t][qs[[_e]].replace({_e: expand(t)})]),
-                             _(qs[_ %_], fn[t1, t2][qs[_f(_e)].replace({_e: expand(t1), _f: t2})]),
-                             _(qs[_._],  fn[t1, t2][qs[_e.addClass(_c)].replace({_e: expand(t1), _c: ref(t2.data.replace(/_/g, '-'))}), when[is_an_element(t1)]]),
-                             _(qs[_ /_], fn[t1, t2][qs[_e._f].replace({_e: expand(t1), _f: t2})]),
-                             _(qs[_, _], fn[t1, t2][qs[_1, _2].replace({_1: expand(t1), _2: expand(t2)})])]]]]}).
+                    _(qs[[_]],  fn     [t][qs[[_e]].replace({_e: expand(t)})]),
+                    _(qs[_ %_], fn[t1, t2][qs[_f(_e)].replace({_e: expand(t1), _f: t2})]),
+                    _(qs[_._],  fn[t1, t2][qs[_e.addClass(_c)].replace({_e: expand(t1), _c: ref(t2.data.replace(/_/g, '-'))}), when[is_an_element(t1)]]),
+                    _(qs[_ /_], fn[t1, t2][qs[_e._f].replace({_e: expand(t1), _f: t2})]),
+                    _(qs[_, _], fn[t1, t2][qs[_1, _2].replace({_1: expand(t1), _2: expand(t2)})])]]]}).
 
 // Final configuration.
 // This one loads all of the others.
