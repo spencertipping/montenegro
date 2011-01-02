@@ -39,7 +39,8 @@ probably a larger problem with the design of the application.
 
                            _.on('/services', 'GET', _.service_listing(req, res) = res /se.r[r.writeHead(200), r.end(seq[_.handlers *['#{_.url} (#{_.method})']].join('\n'))]),
 
-                           _.handler_for(url, method)     = seq[this.handlers %[(_.url.test ? _.url.test(url) : _.url === url) && _.method === method] *[_.handler]] /re[_[_.length - 1]],
+                           _.handler_for(url, method)     = seq[this.handlers %[(_.url.test ? _.url.test(url) : _.url === url) && (! _.method || _.method === method)] *[_.handler]]
+                                                            /re[_[_.length - 1]],
                            _.route(request, response)     = this /se[(_.handler_for(request.url, request.method) || _.not_found).call(_, request, response)]]],
                 where*[result(request, response) = result.route(request, response)]]}).
 
@@ -155,6 +156,21 @@ The client file contains full documentation for the html[] macro (the client end
     this.configure('montenegro.server').montenegro.server.extensions /se[
       _.html(url, t) = let[s = html(t)] in this /se[_.on(url, 'GET', fn[req, res][res /se[_.writeHead(200, {'content-type': 'text/html'}), _.end(s)]])]]}).
 
+Proxy configuration.
+Forwards headers both ways, changing only the 'host' header for sending. You can specify functions to intercept the request/response data to transform it in some way.
+
+  tconfiguration('std seq continuation', 'montenegro.server.proxy', function () {
+    l[http = this.configure('montenegro.core').montenegro.require('http')] in
+    this.configure('montenegro.server').montenegro.server.extensions /se[
+      _.proxy(url, options) = l[options = caterwaul.util.merge({request_transform: fn[request][request], response_transform: fn[response][response]}, options)] in
+                              this /se[_.on(new RegExp('^#{url}'), null, fn[req, res][
+                                l*[parts = /^\/?([^:\/]+)(:?\d*)(\/?.*)$/.exec(req.url.replace(url, '')), host = parts && parts[1], port = parts && Number(parts[2]) || 80,
+                                   req0  = options.request_transform(http.createClient(port, host).request(req.method, parts && parts[3] || '/', req.headers /se[_.host = host]))] in
+                                req0 /se[_.on('response', _) /cps[_.setEncoding('binary'), options.response_transform(_) /se[
+                                                                    res.writeHead(_.statusCode, _.headers), _.on('data', _) /cps[res.write(_, 'binary')], _.on('end', _) /cps[res.end()]]],
+                                         req.on('data', _) /cps.data[_.write(data, 'binary')],
+                                         req.on('end', _)  /cps.x[_.end()]]])]]}).
+
 File server configuration.
 Sometimes you want to serve files from a directory. This is a fairly simple service to do that. I imagine there are security problems with it.
 
@@ -187,4 +203,4 @@ Final configuration.
 This configuration bundles all of the configurations together.
 
   configuration('montenegro', function () {this.configure('montenegro.html montenegro.route.url montenegro.server montenegro.server.rpc montenegro.server.html montenegro.server.file',
-                                                          'montenegro.server.alias montenegro.global-error')});
+                                                          'montenegro.server.alias montenegro.server.proxy montenegro.global-error')});
