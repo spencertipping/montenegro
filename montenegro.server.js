@@ -189,13 +189,14 @@
 
 // | some_server.alias('/', '/index.html');                        // A server-side redirect (no 30x return code)
 //   some_server.alias('/foo', '/bar', 'POST');                    // Alias POST requests instead of GETs
+//   some_server.alias(/^\/foo/(.*)$/, '/bar/$1');                 // Alias all URLs starting with /foo/ to /bar/whatever
 //   some_server.redirect('/', '/index.html');                     // A client-side redirect (301 error code)
 //   some_server.redirect('/', '/index.html', {code: 302});        // A client-side redirect with a custom code
 //   some_server.redirect('/foo', '/bar', {method: 'POST'});       // Issue redirect for POSTs instaed of GETs
 
   tconfiguration('std continuation', 'montenegro.server.alias', function () {
     this.configure('montenegro.server').montenegro.server.extensions /se[
-      _.alias(from, to, method)     = this /se[_.on(from, method || 'GET', fn[req, res][_(req /se[_.url = to], res)])],
+      _.alias(from, to, method)     = this /se[_.on(from, method || 'GET', fn[req, res][_(req /se[_.url = from.test ? _.url.replace(from, to) : to], res)])],
       _.redirect(from, to, options) = let[options = options || {}] in let/cps[(req, res) <- this.on(from, options.method || 'GET', _)]
                                                                              [res.writeHead(options.code || 301, {location: to}), res.end()]]}).
 
