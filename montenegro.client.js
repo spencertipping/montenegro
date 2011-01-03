@@ -157,7 +157,7 @@
            append_single(node, c) = node.append(c.constructor === String ? document.createTextNode(c) : c),
            append_multiple(node)  = l[as = seq[~arguments].slice(1)] in node /se[seq[~as *![_ !== null && _ !== undefined && append_single(node, _)]]]] in
 
-        _.macro /se[_(qs[_], fn[x][qs[_$(_document.createElement(_tag))].replace({_$: ref($), _document: ref(document), _tag: ref(x.data)}), when[is_an_element(x)]]),
+        _.macro /se[_(qs[_], fn[x][qs[_$(_document.createElement(_tag))].replace({_$: ref($), _document: ref(document), _tag: '"#{x.data}"'}), when[is_an_element(x)]]),
 
                     _(qs[_(_)], append), _(qs[_ > _], append), _(qs[_ >= _], append_eval),
                     where[append(t1, t2)      = is_an_element(t1) && qs[_f(_e, _c)].replace({_f: ref(append_multiple), _e: expand(t1), _c: expand(t2)}),
