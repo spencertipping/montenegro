@@ -149,7 +149,7 @@ Note that you can't use hyphens in the class names in Javascript, but if you typ
         this.rmacro(qs[html[_]], _.macroexpand),
 
         _.elements = caterwaul.util.qw('html head body meta script style link title div a span input button textarea option select form label iframe blockquote code caption ' +
-                                       'table tbody tr td th thead tfoot img h1 h2 h3 h4 h5 h6 li ol ul noscript p pre samp sub sup var canvas audio video') /re[seq[!(~_ *[[_, true]])]],
+                                       'table tbody tr td th thead tfoot img h1 h2 h3 h4 h5 h6 li ol ul noscript p pre samp sub sup var canvas audio video') /re[seq[!(~_ *[[_, _]])]],
 
         l*[ref(x)                 = new caterwaul.ref(x),
            expand                 = _.macroexpand,
@@ -157,9 +157,9 @@ Note that you can't use hyphens in the class names in Javascript, but if you typ
            append_single(node, c) = node.append(c.constructor === String ? document.createTextNode(c) : c),
            append_multiple(node)  = l[as = seq[~arguments].slice(1)] in node /se[seq[~as *![_ !== null && _ !== undefined && append_single(node, _)]]]] in
 
-        _.macro /se[_(qs[_], fn[x][qs[_$(_document.createElement(_tag))].replace({_$: ref($), _document: ref(document), _tag: '"#{x.data}"'}), when[is_an_element(x)]]),
+        _.macro /se[_(qs[_], fn[x][e ? qs[_$(_document.createElement(_tag))].replace({_$: ref($), _document: ref(document), _tag: '"#{e}"'}) : x, where[e = is_an_element(x)]]),
 
-                    _(qs[_(_)], append), _(qs[_ > _], append), _(qs[_ >= _], append_eval),
+                    _(qs[_(_)], append), _(qs[_[_]], append_eval), _(qs[_ > _], append), _(qs[_ >= _], append_eval),
                     where[append(t1, t2)      = is_an_element(t1) && qs[_f(_e, _c)].replace({_f: ref(append_multiple), _e: expand(t1), _c: expand(t2)}),
                           append_eval(t1, t2) = is_an_element(t1) && qs[_f(_e, _c)].replace({_f: ref(append_multiple), _e: expand(t1), _c: t2})],
 
