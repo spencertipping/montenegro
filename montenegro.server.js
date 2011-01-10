@@ -200,7 +200,7 @@
   tconfiguration('std continuation', 'montenegro.server.alias', function () {
     this.configure('montenegro.server').montenegro.server.extensions /se[
       _.alias(from, to, method)     = this /se[_.on(from, method === undefined ? 'GET' : method, fn[req, res][_(req /se[_.url = from.test ? _.url.replace(from, to) : to], res)])],
-      _.redirect(from, to, options) = let[options = options || {}] in let/cps[(req, res) <- this.on(from, options.method || 'GET', _)]
+      _.redirect(from, to, options) = let[options = options || {}] in let/cps[(req, res) <- this.on(from, options.method === undefined ? 'GET' : options.method, _)]
                                                                              [res.writeHead(options.code || 301, {location: to}), res.end()]]}).
 
 // Final configuration.
