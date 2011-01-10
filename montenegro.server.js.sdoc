@@ -166,8 +166,9 @@ Forwards headers both ways, changing only the 'host' header for sending. You can
                               this /se[_.on(new RegExp('^#{url}'), null, fn[req, res][
                                 l*[parts = /^\/?([^:\/]+)(:?\d*)(\/?.*)$/.exec(req.url.replace(url, '')), host = parts && parts[1], port = parts && Number(parts[2]) || 80,
                                    req0  = options.request_transform(http.createClient(port, host).request(req.method, parts && parts[3] || '/', req.headers /se[_.host = host]))] in
-                                req0 /se[_.on('response', _) /cps[_.setEncoding('binary'), options.response_transform(_) /se[
-                                                                    res.writeHead(_.statusCode, _.headers), _.on('data', _) /cps[res.write(_, 'binary')], _.on('end', _) /cps[res.end()]]],
+                                req0 /se[req0.on('response', _) /cps[_.setEncoding('binary'), options.response_transform(_) /se.res0[
+                                                                       res.writeHead(res0.statusCode, res0.headers), res0.on('data', _) /cps[res.write(_, 'binary')],
+                                                                                                                     res0.on('end', _)  /cps[res.end()]]],
                                          req.on('data', _) /cps.data[_.write(data, 'binary')],
                                          req.on('end', _)  /cps.x[_.end()]]])]]}).
 
