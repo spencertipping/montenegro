@@ -25,7 +25,7 @@ O(n^2) and average-case n log n in the number of nodes in the document.
 
 The cval() method returns and then clears the value of a component. If you give it a parameter, the value will be cleared to that value rather than set to the empty string.
 
-  tconfiguration('std', 'montenegro.methods', function () {this.configure('montenegro.core').montenegro.$.fn /se[
+  tconfiguration('std seq', 'montenegro.methods', function () {this.configure('montenegro.core').montenegro.$.fn /se[
     _.se(f)      = this /se[f.call(_, _)],
     _.up(s)      = s instanceof Number ? s ? this.parent().up(s - 1) : this : this.closest(s),
     _.cval(nv)   = l[v = this.val()] in this.val(nv || '') /re[v],
