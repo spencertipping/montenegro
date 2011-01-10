@@ -195,9 +195,11 @@
 //   some_server.redirect('/', '/index.html', {code: 302});        // A client-side redirect with a custom code
 //   some_server.redirect('/foo', '/bar', {method: 'POST'});       // Issue redirect for POSTs instaed of GETs
 
+// Specifying a method of null indicates that all methods should be aliased.
+
   tconfiguration('std continuation', 'montenegro.server.alias', function () {
     this.configure('montenegro.server').montenegro.server.extensions /se[
-      _.alias(from, to, method)     = this /se[_.on(from, method || 'GET', fn[req, res][_(req /se[_.url = from.test ? _.url.replace(from, to) : to], res)])],
+      _.alias(from, to, method)     = this /se[_.on(from, method === undefined ? 'GET' : method, fn[req, res][_(req /se[_.url = from.test ? _.url.replace(from, to) : to], res)])],
       _.redirect(from, to, options) = let[options = options || {}] in let/cps[(req, res) <- this.on(from, options.method || 'GET', _)]
                                                                              [res.writeHead(options.code || 301, {location: to}), res.end()]]}).
 
