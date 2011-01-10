@@ -27,7 +27,7 @@ The cval() method returns and then clears the value of a component. If you give 
 
   tconfiguration('std seq', 'montenegro.methods', function () {this.configure('montenegro.core').montenegro.$.fn /se[
     _.se(f)      = this /se[f.call(_, _)],
-    _.up(s)      = s instanceof Number ? s ? this.parent().up(s - 1) : this : this.closest(s),
+    _.up(s)      = s instanceof Number ? s ? this.parent().up(s - 1) : this : this.parents(s).eq(0),
     _.cval(nv)   = l[v = this.val()] in this.val(nv || '') /re[v],
     _.mappend()  = l[xs = arguments] in this /se.t[seq[~xs *![_ instanceof Array ? seq[~_ *![t.mappend(_)]] : t.append(_ instanceof String ? document.createTextNode(_) : _), unless[_ == null]]]],
     _.nearest(s) = this.length ? this.find(s) /re[_.length ? _ : this.parent().nearest(s)] : $([])]}).
