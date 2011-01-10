@@ -29,7 +29,7 @@ The cval() method returns and then clears the value of a component. If you give 
     _.se(f)      = this /se[f.call(_, _)],
     _.up(s)      = s instanceof Number ? s ? this.parent().up(s - 1) : this : this.closest(s),
     _.cval(nv)   = l[v = this.val()] in this.val(nv || '') /re[v],
-    _.mappend()  = this /se.t[seq[~arguments *![_ !== null && _ !== undefined && t.append(_ instanceof String ? document.createTextNode(_) : _)]]],
+    _.mappend()  = this /se.t[seq[~arguments *![_ instanceof Array ? seq[~_ *!+(t/mb/mappend)] : t.append(_ instanceof String ? document.createTextNode(_) : _), unless[_ == null]]]],
     _.nearest(s) = this.length ? this.find(s) /re[_.length ? _ : this.parent().nearest(s)] : $([])]}).
 
   Event extensions.
