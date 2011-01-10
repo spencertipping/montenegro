@@ -29,7 +29,7 @@
     _.se(f)      = this /se[f.call(_, _)],
     _.up(s)      = s instanceof Number ? s ? this.parent().up(s - 1) : this : this.closest(s),
     _.cval(nv)   = l[v = this.val()] in this.val(nv || '') /re[v],
-    _.mappend()  = this /se.t[seq[~arguments *![_ instanceof Array ? seq[~_ *![t.mappend(_)]] : t.append(_ instanceof String ? document.createTextNode(_) : _), unless[_ == null]]]],
+    _.mappend()  = l[xs = arguments] in this /se.t[seq[~xs *![_ instanceof Array ? seq[~_ *![t.mappend(_)]] : t.append(_ instanceof String ? document.createTextNode(_) : _), unless[_ == null]]]],
     _.nearest(s) = this.length ? this.find(s) /re[_.length ? _ : this.parent().nearest(s)] : $([])]}).
 
 //   Event extensions.
@@ -69,8 +69,8 @@
     tconfiguration('std seq', 'montenegro.rpc', function () {
       this.configure('montenegro.core').montenegro /se[
         _.rpc(url)() = l[as = seq[~arguments]][l*[callback = as.length && as[as.length - 1] /re[_.constructor === Function && as.pop()]] in
-                                                 $.ajax({url: url, type: 'POST', contentType: 'application/json', data: JSON.stringify(as.slice()),
-                                                     success: fn[reply][callback && callback.apply(fn_[_.rpc(url).apply(null, seq[~arguments].slice().concat([callback]))], reply)]})]]}).
+                                               $.ajax({url: url, type: 'POST', contentType: 'application/json', data: JSON.stringify(as.slice()),
+                                                   success: fn[reply][callback && callback.apply(fn_[_.rpc(url).apply(null, seq[~arguments].slice().concat([callback]))], reply)]})]]}).
 
 // DOM construction.
 // You can build elements using a CSS-selector-style syntax. (Alternatively, you can provide an element in the markup; if you do it this way, the template element's ID should match the model
