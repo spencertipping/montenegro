@@ -73,7 +73,7 @@
 
       _.html /se[_.caterwaul_path  = 'http://spencertipping.com/caterwaul/caterwaul.all.js',
                  _.montenegro_path = 'http://spencertipping.com/montenegro/montenegro.client.js',
-                 _.jquery_path     = 'http://spencertipping.com/jquery-patched/jquery.st.js']]}).
+                 _.jquery_path     = 'http://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js']]}).
 
 // RPC endpoints.
 // You can create an RPC service on a URL. The RPC endpoint wraps the function in a CPS-converted HTTP request/response proxy that listens for POST requests on a given URL, expects a JSON array
