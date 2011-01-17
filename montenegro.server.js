@@ -60,7 +60,7 @@
 // | response /se[_.writeHead(200, {'content-type': 'text/html'}),
 //                _.end(montenegro.html(qs[$('body').append(html[h1('Hello world!')])]))];
 
-// This builds a client page that loads caterwaul.all.js, montenegro.client.js, and jQuery. By default, caterwaul.all.js and montenegro.jquery.js come from my webserver (which sometimes is down),
+// This builds a client page that loads caterwaul.all.js, montenegro.client.js, and jQuery. By default, caterwaul.all.js and montenegro.client.js come from my webserver (which sometimes is down),
 // but you can change where it requests these scripts by setting _.html.caterwaul_path, _.html.montenegro_path, and _.html.jquery_path.
 
   tconfiguration('std', 'montenegro.html', function () {
