@@ -38,9 +38,7 @@
 
     tconfiguration('std seq continuation', 'montenegro.fixes', function () {jQuery.fn /se[
       l*[tn          = document/mb/createTextNode,
-         is_array(x) = x instanceof Array,
-         multi(f)()  = l[xs = arguments] in
-                       this /se.t[seq[~xs *![is_array(_) ? seq[~_ *![multi(f).apply(t, _.slice())]] : f.call(t, _.constructor === String ? tn(_) : _), unless[_ == null]]]]] in
+         multi(f)()  = l[xs = arguments] in this /se.t[seq[~xs *![_ instanceof Array ? multi(f).apply(t, _.slice()) : f.call(t, _.constructor === String ? tn(_) : _), unless[_ == null]]]]] in
       seq[~'append before after prepend'.split(/\s+/) *!m[_[m] = multi(_[m])]],
 
       _.clone() = clone.call(this) /se[seq[(~this.find(fill) *+$ ^ ~_.find(fill) *+$) *![_[0].val(_[1].val())]]], where[$ = jQuery, fill = 'select, textarea', clone = _.clone]]}).
