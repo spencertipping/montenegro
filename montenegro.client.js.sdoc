@@ -174,7 +174,7 @@ Note that you can't use hyphens in the class names in Javascript, but if you typ
                     _(qs[_(_)], appender(expand, expand)), _(qs[_[_]], appender(expand, id)), _(qs[_ > _], appender(expand, expand)), _(qs[_ >= _], appender(expand, id)),
                     where[id(x) = x, appender(f, g)(t1, t2) = is_an_element(t1) && qs[_e.append(_c)].replace({_e: f(t1), _c: g(t2)})],
 
-                    _(qs[[_]],  fn     [t][qs[[_e]]  .replace({_e: expand(t)})]),          _(qs[_, _], fn[t1, t2][qs[_1, _2].replace({_1: expand(t1), _2: expand(t2)})])
+                    _(qs[[_]],  fn     [t][qs[[_e]]  .replace({_e: expand(t)})]),          _(qs[_, _], fn[t1, t2][qs[_1, _2].replace({_1: expand(t1), _2: expand(t2)})]),
                     _(qs[_ %_], fn[t1, t2][qs[_f(_e)].replace({_e: expand(t1), _f: t2})]), _(qs[_ /_], fn[t1, t2][qs[_e._f] .replace({_e: expand(t1), _f: t2})]),
 
                     _(qs[_ *_(_)], fn[e, a, v][qs[_e.attr(_a, _v)].replace({_e: expand(e),  _a: '"#{htmlify(a.data)}"', _v: v}), when[is_an_element(e)]]),
