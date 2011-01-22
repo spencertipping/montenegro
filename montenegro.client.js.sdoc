@@ -36,9 +36,11 @@ The cval() method returns and then clears the value of a component. If you give 
     http://github.com/spencertipping/jquery.fix.select-clone
     http://github.com/spencertipping/jquery.fix.textarea-clone
 
-    tconfiguration('std seq continuation', 'montenegro.fixes', function () {jQuery.fn /se[
-      l*[tn          = document/mb/createTextNode,
-         multi(f)()  = l[xs = arguments] in this /se.t[seq[~xs *![_ instanceof Array ? multi(f).apply(t, _.slice()) : f.call(t, _.constructor === String ? tn(_) : _), unless[_ == null]]]]] in
+    tconfiguration('std seq continuation', 'montenegro.fixes', function () {
+    jQuery /se[_.from_many() = _(seq[~arguments -[_ instanceof Array ? _ : [_]]].slice())],
+    jQuery.fn /se[
+      l*[tn         = document/mb/createTextNode,
+         multi(f)() = l[xs = arguments] in this /se.t[seq[~xs *![_ instanceof Array ? multi(f).apply(t, _.slice()) : f.call(t, _.constructor === String ? tn(_) : _), unless[_ == null]]]]] in
       seq[~'append before after prepend'.split(/\s+/) *!m[_[m] = multi(_[m])]],
 
       _.clone() = clone.call(this) /se[seq[(~this.find(fill) *+$ ^ ~_.find(fill) *+$) *![_[0].val(_[1].val())]]], where[$ = jQuery, fill = 'select, textarea', clone = _.clone]]}).
@@ -161,7 +163,7 @@ Note that you can't use hyphens in the class names in Javascript, but if you typ
 
     tconfiguration('std seq continuation', 'montenegro.dom', function () {
       this.configure('montenegro.fixes montenegro.methods').namespace('montenegro').dom = this.global().clone() /se[
-        this.rmacro(qs[html[_]], _) /cps.t[qs[$([_x])].replace({_x: _.macroexpand(t)})],
+        this.rmacro(qs[html[_]], _) /cps.t[qs[$.from_many(_x)].replace({_x: _.macroexpand(t)})],
 
         _.elements = this.util.qw('html head body meta script style link title div a span input button textarea option select form label iframe blockquote code caption ' +
                                   'table tbody tr td th thead tfoot img h1 h2 h3 h4 h5 h6 li ol ul noscript p pre samp sub sup var canvas audio video') /re[seq[!(~_ *[[_, _]])]],
