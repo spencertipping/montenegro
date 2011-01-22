@@ -37,7 +37,7 @@ The cval() method returns and then clears the value of a component. If you give 
     http://github.com/spencertipping/jquery.fix.textarea-clone
 
     tconfiguration('std seq continuation', 'montenegro.fixes', function () {
-    jQuery /se[_.from_many() = _(seq[~arguments -[_ instanceof Array ? _ : _ instanceof jQuery ? ~_ : [_]]].slice())],
+    jQuery /se[_.from_many() = l[as = arguments] in _([]) /se.r[~as *![_ instanceof Array || _ instanceof jQuery ? seq[~_ *![r.push(_)]] : r.push(_)]]],
     jQuery.fn /se[
       l*[tn         = document/mb/createTextNode,
          multi(f)() = l[xs = arguments] in this /se.t[seq[~xs *![_ instanceof Array ? multi(f).apply(t, _.slice()) : f.call(t, _.constructor === String ? tn(_) : _), unless[_ == null]]]]] in
@@ -163,14 +163,14 @@ Note that you can't use hyphens in the class names in Javascript, but if you typ
 
     tconfiguration('std seq continuation', 'montenegro.dom', function () {
       this.configure('montenegro.fixes montenegro.methods').namespace('montenegro').dom = this.global().clone() /se[
-        this.rmacro(qs[html[_]], _) /cps.t[qs[$.from_many(_x)].replace({_x: _.macroexpand(t)})],
+        this.rmacro(qs[html[_]], _) /cps.t[qs[jQuery.from_many(_x)].replace({_x: _.macroexpand(t)})],
 
         _.elements = this.util.qw('html head body meta script style link title div a span input button textarea option select form label iframe blockquote code caption ' +
                                   'table tbody tr td th thead tfoot img h1 h2 h3 h4 h5 h6 li ol ul noscript p pre samp sub sup var canvas audio video') /re[seq[!(~_ *[[_, _]])]],
 
         l*[ref(x) = new this.ref(x), expand = _.macroexpand, is_an_element(tree) = _.elements[tree.data] || tree[0] && is_an_element(tree[0]), htmlify(s) = s.replace(/_/g, '-')] in
 
-        _.macro /se[_(qs[_], fn[x][e ? qs[$(document.createElement(_tag))].replace({_tag: '"#{e}"'}) : x, where[e = is_an_element(x)]]),
+        _.macro /se[_(qs[_], fn[x][e ? qs[jQuery(document.createElement(_tag))].replace({_tag: '"#{e}"'}) : x, where[e = is_an_element(x)]]),
 
                     _(qs[_(_)], appender(expand, expand)), _(qs[_[_]], appender(expand, id)), _(qs[_ > _], appender(expand, expand)), _(qs[_ >= _], appender(expand, id)),
                     where[id(x) = x, appender(f, g)(t1, t2) = is_an_element(t1) && qs[_e.append(_c)].replace({_e: f(t1), _c: g(t2)})],
