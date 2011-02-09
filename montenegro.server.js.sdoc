@@ -21,7 +21,7 @@ URL router.
 Montenegro gives you a quick proxy function to route requests based on URL patterns. This makes a suitable server if you want to promote it into one (and in fact it is the function you get
 back when you create a new server). Configuration is done like this:
 
-| var router = montenegro.route.url();
+| var router = caterwaul.montenegro.route.url();
   router.on('/foo', 'GET', fn[request, response][response /se[_.writeHead(200), _.end('bar')]]);
   router.not_found(request, response) = response /se[_.writeHead(404), _.end('Bummer dude, not found')];
 
