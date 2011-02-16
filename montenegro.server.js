@@ -21,7 +21,7 @@
 // Montenegro gives you a quick proxy function to route requests based on URL patterns. This makes a suitable server if you want to promote it into one (and in fact it is the function you get
 // back when you create a new server). Configuration is done like this:
 
-// | var router = montenegro.route.url();
+// | var router = caterwaul.montenegro.route.url();
 //   router.on('/foo', 'GET', fn[request, response][response /se[_.writeHead(200), _.end('bar')]]);
 //   router.not_found(request, response) = response /se[_.writeHead(404), _.end('Bummer dude, not found')];
 
@@ -164,7 +164,7 @@
     this.configure('montenegro.server').montenegro.server.extensions /se[
       _.proxy(url, options) = l[options = caterwaul.util.merge({request_transform: fn[request][request], response_transform: fn[response][response]}, options)] in
                               this /se[_.on(new RegExp('^#{url}'), null, fn[req, res][
-                                l*[parts = /^\/?([^:\/]+)(:?\d*)(\/?.*)$/.exec(req.url.replace(url, '')), host = parts && parts[1], port = parts && Number(parts[2]) || 80,
+                                l*[parts = /^\/?([^:\/]+)(:?\d*)(\/?.*)$/.exec(req.url.replace(url, '')), host = parts && parts[1], port = parts && Number(parts[2].substring(1)) || 80,
                                    req0  = options.request_transform(http.createClient(port, host).request(req.method, parts && parts[3] || '/', req.headers /se[_.host = host]))] in
                                 req0 /se[req0.on('response', _) /cps[_.setEncoding('binary'), options.response_transform(_) /se.res0[
                                                                        res.writeHead(res0.statusCode, res0.headers), res0.on('data', _) /cps[res.write(_, 'binary')],
