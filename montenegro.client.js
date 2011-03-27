@@ -25,8 +25,9 @@
 //   Some events are common enough that it's useful to have a handler for them. Hitting the enter key is one of those. Another is getting a link to have a click action and look active, but not
 //   actually go anywhere.
 
-    tconfiguration('std', 'montenegro.events', function () {jQuery.fn /se[_.enter_key(f) = this.keyup(fn[e][e.which === 13 && f.call(this, e)]),
-                                                                          _.clickable(f) = this.attr('href', 'javascript:void(0)').click(f)]}).
+    tconfiguration('std', 'montenegro.events', function () {jQuery.fn /se[_.enter_key(f)  = this.keyup(fn[e][f.call(this, e), when[e.which === 13]]),
+                                                                          _.escape_key(f) = this.keyup(fn[e][f.call(this, e), when[e.which === 27]]),
+                                                                          _.clickable(f)  = this.attr('href', 'javascript:void(0)').click(f)]}).
 
 //   Fixes.
 //   These are fixes for places where jQuery is somehow suboptimal. Examples include extensions to support variadic/pluralized append(), prepend(), before(), and after(), and various fixes for
@@ -37,13 +38,23 @@
 //     http://github.com/spencertipping/jquery.fix.textarea-clone
 
     tconfiguration('std seq continuation', 'montenegro.fixes', function () {
-    jQuery /se[_.from_many() = l[as = arguments] in _([]) /se.r[seq[~as *![_ instanceof Array || _ instanceof jQuery ? seq[~_ *![r.push(_)]] : r.push(_)]]]],
-    jQuery.fn /se[
-      l*[tn         = document/mb/createTextNode,
-         multi(f)() = l[xs = arguments] in this /se.t[seq[~xs *![_ instanceof Array ? multi(f).apply(t, _.slice()) : f.call(t, _), unless[_ == null]]]]] in
-      seq[~'append before after prepend'.split(/\s+/) *!m[_[m] = multi(_[m])]],
+      $.from_many() = l[as = arguments] in _([]) /se.r[seq[~as *![_ instanceof Array || _ instanceof jQuery ? seq[~_ *![r.push(_)]] : r.push(_)]]],
 
-      _.clone() = clone.call(this) /se[seq[(~this.find(fill) *+$ ^ ~_.find(fill) *+$) *![_[0].val(_[1].val())]]], where[$ = jQuery, fill = 'select, textarea', clone = _.clone]]}).
+      $.fn.clone() = original_clone.call(this) /se[clone_values_of_components(this, _)],
+
+      $.fn.after   = make_variadic_and_plural($.fn.after),
+      $.fn.before  = make_variadic_and_plural($.fn.before),
+      $.fn.append  = make_variadic_and_plural($.fn.append),
+      $.fn.prepend = make_variadic_and_plural($.fn.prepend),
+
+      where*[$                                               = jQuery
+             original_clone                                  = $.clone,
+             make_variadic_and_plural(f)()                   = l[xs = arguments] in
+                                                               this /se.t[seq[~xs *![_ instanceof Array ? make_variadic_and_plural(f).apply(t, _.slice()) : f.call(t, _), unless[_ == null]]]],
+
+             clone_values_of_components(source, destination) = l*[needs_filling = 'select, textarea',
+                                                                  paired        = seq[~source.find(needs_filling) *+$ ^ destination.find(needs_filling) *+$]] in
+                                                               seq[paired *![_[1].val(_[0].val())]]]}).
 
 // RPC tunneling.
 // You can connect to a server endpoint with a CPS-converted proxy function. You can also send opaque references to the server (presumably so that it can send them back). Here's an example of
@@ -156,6 +167,15 @@
 //   The complete list is in caterwaul.montenegro.dom.elements; setting additional keys in this hash to truthy values causes those identifiers to be treated as valid HTML elements. (I mention
 //   this because at the moment the HTML5 standard isn't completely listed.)
 
+//     Caveats.
+//     Sometimes context inference doesn't quite work right. One particular case is when you embed the seq[] macro inside html[] -- in this case, the html[] macro happily dives through the seq[]
+//     shell and into the expressions, interpreting things like seq[xs *[_ + 1]] as HTML invocations with attributes called []. (Obviously not the right thing to do.)
+
+//     To prevent this from happening, use forcing contexts such as >= and []. For example:
+
+//     | html[table(seq[~rows *[tr(td(_.name), td(_.value))]])]                    // This fails at compile-time
+//       html[table[seq[~rows *[html[tr(td(_.name, td(_.value))]]]]]               // Forced context; this one works
+
 //   Subtleties of this macroexpander.
 //   There's only one thing that's particularly subtle and crucial to how this works. That's the detail of the qs[_] matcher, which is the first macro defined for the DOM expander. This macro
 //   isn't written as a conditional because we never want the macroexpansion to descend as it normally would. Rather, we drive the descent using explicit calls to macroexpand(). Therefore, qs[_]
@@ -185,5 +205,4 @@
 // This one loads all of the others (though it lets you specify whether you want indirected references or not).
 
   configuration('montenegro', function () {this.configure('montenegro.methods montenegro.events montenegro.fixes montenegro.rpc montenegro.dom')});
-
 // Generated by SDoc 

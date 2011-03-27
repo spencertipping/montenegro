@@ -1,1 +1,0 @@
-sdocp('test/trivial-rpc.js.sdoc', 'Trivial RPC service.\n\ncaterwaul.clone(\'std montenegro\')(function () {\n  caterwaul.montenegro.server(8080) /se[_.rpc(\'/add-things\', \'Adds two numbers and returns the result\', fn[x, y][this(x + y)])];\n})();\n');

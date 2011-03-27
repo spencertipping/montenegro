@@ -3,7 +3,7 @@ Montenegro consists of two files, montenegro.client.js and montenegro.server.js.
 
 Client-side library.
 There are two cool things that the client-side library gives you. One is an RPC connector (see below), and the other is a HAML-like language for creating HTML structure. Both features require
-jQuery, and the latter assumes that you're using the append-multiple patch (or equivalent) -- this changes the append() method to support multiple arguments and array parameters.
+jQuery, and the second one amends some of jQuery's built-in methods to be more useful. (See documentation in the source code for details.)
 
 Markup language.
 To get access to the markup language you can configure a Caterwaul function with 'montenegro', like this:
@@ -84,8 +84,11 @@ The corresponding client connector looks like this:
 You can also:
 
   1. Serve a directory as static files: server.file('/url', 'directory')
-  2. Serve a page with some client code: server.html('/testpage', qs[$('body').append( html<< h1('Hello world'))]);
+  2. Serve a page with some client code: server.html('/testpage', qs[$('body').append(html[h1('Hello world')])]);
   3. Handle a request with a regular function: server.on('/custom', 'GET', function (request, response) {...});
 
 See the applications in test/ for some examples of how to use it. (Also check out the sdoc.html page -- available online at http://spencertipping.com/montenegro/sdoc.html -- which goes over
-many details and edge cases.) You can run the tests by using "./build test chat-server", for instance. The build script assumes that node is in your $PATH.
+many details and edge cases.) You can run the tests by using "./montenegro test chat-server", for instance. It assumes that node is in your $PATH.
+
+Philosophically the server-side library is kind of lame in that it jumps up the abstraction ladder too far. My goal is to have less layering and more ad-hoc service-defining functions, so
+maybe this is appropriate. (I admit, however, that the design could be better.)

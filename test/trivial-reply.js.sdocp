@@ -1,1 +1,0 @@
-sdocp('test/trivial-reply.js.sdoc', 'Trivial reply service.\n\ncaterwaul.clone(\'std montenegro\')(function () {\n  caterwaul.montenegro.server(8080) /se[_.on(\'/hello\', \'GET\', fn[req, res][res /se[_.writeHead(200), _.end(\'Hi there\')]])];\n})();\n');
