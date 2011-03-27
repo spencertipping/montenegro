@@ -487,6 +487,7 @@ my @flags       = map {my $k = $_; join '', map($flag_hashes{$_}{$k} ? $_ : '-',
 join "\n", map strip($_), split /\n/, table_display($all ? [@definitions] : [grep length, @externals], $dereference ? ([@externals]) : (),
                                                     $sizes ? ([@sizes]) : (), $flags ? ([@flags]) : ());
 __acdc3ca5777ab9c7c430d493a7555998
+meta::function('minify', 'node([\'cached_dependency::caterwaul.all.js\', \'js::minify\'], $_[0]);');
 meta::function('mv', <<'__52e95180e3c7019116bd798e0da0fdda');
 my ($from, $to) = @_;
 die "'$from' does not exist" unless exists $data{$from};
@@ -721,6 +722,8 @@ terminal::error("Verification failed; expected $state but got $observed from $ot
 hook('after-verify', $result, observed => $observed, expected => $state);
 $result;
 __d31b85fffd464ddf516d2afeb63dcbde
+meta::hook('after-render::cleanup', 'unlink qw/minify.js minify.js.sdocp/;');
+meta::hook('after-render::minify', 'minify($_) for qw/montenegro.client.js montenegro.server.js/;');
 meta::internal_function('around_hook', <<'__e1cd17b80d4e8165df9c94facd9f239b');
 # around_hook('hookname', @args, sub {
 #   stuff;
@@ -1126,7 +1129,14 @@ meta::retriever('sdocp', <<'__fef74cd94fa8761618662802f0bfc171');
 my $attribute = attribute($_[0]);
 exists $data{"sdoc::$attribute"} ? sdocp("sdoc::$attribute") : undef;
 __fef74cd94fa8761618662802f0bfc171
-meta::sdoc('js::montenegro.client', <<'__17d2b9630589cbd048b5f6b74c6f1b50');
+meta::sdoc('js::minify', <<'__c427ba38be3090426d6ef69c5cabf6b3');
+Minifies a JavaScript file by using the Caterwaul parse/deparse mechanism.
+This won't do identifier packing (which is unsafe in Caterwaul), but it will provide decent minification by removing comments and most whitespace.
+
+var code = require('fs').readFileSync(process.argv[2], 'utf8');
+require('fs').writeFileSync(process.argv[2].replace(/\.js$/, '.min.js'), caterwaul.parse(code).serialize(), 'utf8');
+__c427ba38be3090426d6ef69c5cabf6b3
+meta::sdoc('js::montenegro.client', <<'__ba020c1380510106b099bbf35892472b');
 Montenegro client-side bindings | Spencer Tipping
 Licensed under the terms of the MIT source code license
 
@@ -1167,7 +1177,7 @@ The cval() method returns and then clears the value of a component. If you give 
     http://github.com/spencertipping/jquery.fix.textarea-clone
 
     tconfiguration('std seq continuation', 'montenegro.fixes', function () {
-      $.from_many() = l[as = arguments] in _([]) /se.r[seq[~as *![_ instanceof Array || _ instanceof jQuery ? seq[~_ *![r.push(_)]] : r.push(_)]]],
+      $.from_many() = l[as = arguments] in $([]) /se.r[seq[~as *![_ instanceof Array || _ instanceof jQuery ? seq[~_ *![r.push(_)]] : r.push(_)]]],
 
       $.fn.clone() = original_clone.call(this) /se[clone_values_of_components(this, _)],
 
@@ -1334,7 +1344,7 @@ Final configuration.
 This one loads all of the others (though it lets you specify whether you want indirected references or not).
 
   configuration('montenegro', function () {this.configure('montenegro.methods montenegro.events montenegro.fixes montenegro.rpc montenegro.dom')});
-__17d2b9630589cbd048b5f6b74c6f1b50
+__ba020c1380510106b099bbf35892472b
 meta::sdoc('js::montenegro.server', <<'__937d3ebc1cee60d422853e00aebd815d');
 Montenegro server library | Spencer Tipping
 Licensed under the terms of the MIT source code license

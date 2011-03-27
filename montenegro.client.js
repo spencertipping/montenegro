@@ -38,7 +38,7 @@
 //     http://github.com/spencertipping/jquery.fix.textarea-clone
 
     tconfiguration('std seq continuation', 'montenegro.fixes', function () {
-      $.from_many() = l[as = arguments] in _([]) /se.r[seq[~as *![_ instanceof Array || _ instanceof jQuery ? seq[~_ *![r.push(_)]] : r.push(_)]]],
+      $.from_many() = l[as = arguments] in $([]) /se.r[seq[~as *![_ instanceof Array || _ instanceof jQuery ? seq[~_ *![r.push(_)]] : r.push(_)]]],
 
       $.fn.clone() = original_clone.call(this) /se[clone_values_of_components(this, _)],
 
