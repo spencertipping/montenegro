@@ -47,7 +47,7 @@
       $.fn.append  = make_variadic_and_plural($.fn.append),
       $.fn.prepend = make_variadic_and_plural($.fn.prepend),
 
-      where*[$                                               = jQuery
+      where*[$                                               = jQuery,
              original_clone                                  = $.clone,
              make_variadic_and_plural(f)()                   = l[xs = arguments] in
                                                                this /se.t[seq[~xs *![_ instanceof Array ? make_variadic_and_plural(f).apply(t, _.slice()) : f.call(t, _), unless[_ == null]]]],
