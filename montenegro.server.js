@@ -185,7 +185,9 @@
       e.file_extension_mimetypes = {css: 'text/css', html: 'text/html', js: 'application/javascript', '': 'text/plain'},
 
       e.file(url, filename) = this /se[l/cps[(req, res) <- this.on(new RegExp('^#{url.replace(/\/$/, "")}(/|$)'), 'GET', _)]
-                                            [res.writeHead(200, {'content-type': content_type_for(req.url)}), read_stream.pipe(res),
+                                            [req.url = req.url.replace(/\?.*$/, ''),
+
+                                             res.writeHead(200, {'content-type': content_type_for(req.url)}), read_stream.pipe(res),
                                              where[read_stream           = fs.createReadStream('#{filename}#{sanitize(req.url.substring(url.length))}'),
                                                    content_type_for(url) = /\.(\w+)$/.exec(url) /re[_ && _[1] /re[e.file_extension_mimetypes[_] || e.file_extension_mimetypes['']]]]]]]}).
 
