@@ -1367,7 +1367,7 @@ This one loads all of the others (though it lets you specify whether you want in
 
   configuration('montenegro', function () {this.configure('montenegro.methods montenegro.events montenegro.fixes montenegro.rpc montenegro.dom')});
 __ba020c1380510106b099bbf35892472b
-meta::sdoc('js::montenegro.server', <<'__f8970a1ab871b1cd511f77494c1d916d');
+meta::sdoc('js::montenegro.server', <<'__578b9babfcb76307f49543dd07b25840');
 Montenegro server library | Spencer Tipping
 Licensed under the terms of the MIT source code license
 
@@ -1555,11 +1555,10 @@ Sometimes you want to serve files from a directory. This is a fairly simple serv
       e.file_extension_mimetypes = {css: 'text/css', html: 'text/html', js: 'application/javascript', '': 'text/plain'},
 
       e.file(url, filename) = this /se[l/cps[(req, res) <- this.on(new RegExp('^#{url.replace(/\/$/, "")}(/|$)'), 'GET', _)]
-                                            [req.url = req.url.replace(/\?.*$/, ''),
-
-                                             res.writeHead(200, {'content-type': content_type_for(req.url)}), read_stream.pipe(res),
-                                             where[read_stream           = fs.createReadStream('#{filename}#{sanitize(req.url.substring(url.length))}'),
-                                                   content_type_for(url) = /\.(\w+)$/.exec(url) /re[_ && _[1] /re[e.file_extension_mimetypes[_] || e.file_extension_mimetypes['']]]]]]]}).
+                                            [res.writeHead(200, {'content-type': content_type_for(new_url)}), read_stream.pipe(res),
+                                             where*[new_url               = req.url.replace(/\?.*$/, ''),
+                                                    read_stream           = fs.createReadStream('#{filename}#{sanitize(new_url.substring(url.length))}'),
+                                                    content_type_for(url) = /\.(\w+)$/.exec(url) /re[_ && _[1] /re[e.file_extension_mimetypes[_] || e.file_extension_mimetypes['']]]]]]]}).
 
 Alias configuration.
 Gives you the ability to alias content with or without redirects. For example:
@@ -1584,7 +1583,7 @@ This configuration bundles all of the configurations together.
 
   configuration('montenegro', function () {this.configure('montenegro.html montenegro.route.url montenegro.server montenegro.server.rpc montenegro.server.html montenegro.server.file',
                                                           'montenegro.server.alias montenegro.server.proxy')});
-__f8970a1ab871b1cd511f77494c1d916d
+__578b9babfcb76307f49543dd07b25840
 meta::sdoc('js::test/chat-server', <<'__3d69a36b765b14d32157c88c485ec402');
 A trivial chat server.
 
@@ -1598,6 +1597,12 @@ caterwaul.clone('std seq montenegro')(function () {
                    let*[send = caterwaul.montenegro.rpc('/chat/send')] in
                    $('body').append(html[div.log(input /enter_key(fn_[send($(this).val()), $(this).val('')]))])])]})();
 __3d69a36b765b14d32157c88c485ec402
+meta::sdoc('js::test/file', <<'__7d72bbcdd95c2ce559df15914e54f4bb');
+File server test app
+
+caterwaul.clone('std seq continuation montenegro')(function () {
+  caterwaul.montenegro.server(8080) /se[_.file('/', './')]})();
+__7d72bbcdd95c2ce559df15914e54f4bb
 meta::sdoc('js::test/paint-app', <<'__4141b34bbe6c3cda548684c343b346bd');
 Collaborative paint test application
 
